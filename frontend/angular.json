@@ -21,12 +21,14 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "./node_modules/leaflet/dist/images/",
+                "output": "./assets/images/leaflet"
               }
             ],
             "styles": [
               "normalize.css/normalize.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []
           },

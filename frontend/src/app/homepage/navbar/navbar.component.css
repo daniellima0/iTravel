@@ -1,5 +1,82 @@
-div {
+.navbar {
   display: flex;
   justify-content: space-between;
-  margin: 0 20px;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc; /* Ligne mince dessous */
+  background-color: #fff;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 30px;
+  margin-right: 10px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.navbar-right {
+  position: relative;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 20px;
+  width: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: #333;
+  border-radius: 2px;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
+}
+
+.menu.open {
+  display: block; /* Le menu est visible si la classe 'open' est présente */
+}
+
+.menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.menu a:hover {
+  background-color: #f5f5f5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu {
+    width: 150px; /* Ajuster si nécessaire */
+  }
 }

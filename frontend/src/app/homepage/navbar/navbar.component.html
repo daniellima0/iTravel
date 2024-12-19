@@ -1,4 +1,17 @@
-<div>
-  <p>Logo</p>
-  <button>Click Me</button>
+<div class="navbar">
+  <div class="navbar-left">
+    <img src="logo.png" alt="Logo" class="logo" />
+    <span class="title">iTravel</span>
+  </div>
+  <div class="navbar-right">
+    <button class="hamburger-icon" aria-label="Menu" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="menu">
+      <a href="/my-photos">My Photos</a>
+      <a href="/sign-out">Sign Out</a>
+    </div>
+  </div>
 </div>
