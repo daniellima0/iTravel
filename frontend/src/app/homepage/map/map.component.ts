@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
-import { LocationService } from '../../services/location.service';
+import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 
 @Component({
   standalone: true,
@@ -10,7 +10,8 @@ import { LocationService } from '../../services/location.service';
 })
 export class Map implements OnInit, AfterViewInit {
   private map!: L.Map;
-  icon = {
+
+  private icon = {
     icon: L.icon({
       iconSize: [25, 41],
       iconAnchor: [13, 0],
@@ -19,23 +20,16 @@ export class Map implements OnInit, AfterViewInit {
     }),
   };
 
-  marker: L.Marker = L.marker([-13.004079, -38.461034], this.icon);
-  geoJsonData = 'data/countries.geo.json';
+  private geoJsonData = 'data/countries.geo.json';
+  private markers: L.Marker[] = []; // To store all markers
 
-  constructor(private locationService: LocationService) {}
+  constructor(private photoService: PhotoService) {}
 
-  ngOnInit() {
-    this.locationService.location$.subscribe((location) => {
-      if (location) {
-        this.marker.setLatLng([location.latitude, location.longitude]);
-      }
-    });
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.initializeMap();
     this.addMarkers();
-    this.centerMap();
     this.addGeoJsonLayer();
   }
 
@@ -50,22 +44,63 @@ export class Map implements OnInit, AfterViewInit {
       subdomains: 'abcd',
       maxZoom: 19,
     }).addTo(this.map);
+
+    this.showWordlyView();
+  }
+
+  private showWordlyView() {
+    this.map.setView([0, 0], 0);
+    this.map.fitWorld();
+    this.map.zoomIn(2);
   }
 
   private addMarkers() {
-    // Add your markers to the map
-    this.marker.addTo(this.map);
+    // Subscribe to the photos$ observable to get photo updates
+    this.photoService.photos$.subscribe((photos: PhotoMetadata[]) => {
+      // Remove existing markers from the map
+      this.clearMarkers();
+
+      // Add markers for photos with location data
+      photos.forEach((photo) => {
+        if (photo.location) {
+          const marker = L.marker(
+            [photo.location.latitude, photo.location.longitude],
+            this.icon
+          ).addTo(this.map);
+
+          // Optional: Add a popup with additional photo details
+          marker.bindPopup(`
+            <strong>Photo ID:</strong> ${photo.id}<br>
+            <strong>Timestamp:</strong> ${photo.createdAt}<br>
+          `);
+
+          this.markers.push(marker);
+        }
+      });
+
+      // Center and fit the map to show all markers
+      this.centerMap();
+    });
   }
 
   private centerMap() {
-    // Obtenez la position du marqueur
-    const latLng = this.marker.getLatLng(); // Assurez-vous que marker est défini
+    if (this.markers.length === 0) {
+      this.showWordlyView(); // Default to world view if no markers
+      return;
+    }
 
-    // Transformez-la en LatLngBounds
-    const bounds = L.latLngBounds([latLng]);
-
-    // Ajustez la carte
+    const bounds = L.latLngBounds(
+      this.markers.map((marker) => marker.getLatLng())
+    );
     this.map.fitBounds(bounds);
+  }
+
+  private clearMarkers() {
+    // Remove all markers from the map
+    this.markers.forEach((marker) => {
+      this.map.removeLayer(marker);
+    });
+    this.markers = [];
   }
 
   private addGeoJsonLayer() {

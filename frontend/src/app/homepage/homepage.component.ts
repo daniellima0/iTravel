@@ -29,9 +29,6 @@ export class Homepage {
         // Extract EXIF data using ExifReader
         const tags = ExifReader.load(arrayBuffer);
 
-        // Log the extracted EXIF data to the console
-        console.log('Extracted EXIF data:', tags);
-
         // Extract latitude and longitude if available
         const gpsLatitude = tags.GPSLatitude?.description;
         const gpsLongitude = tags.GPSLongitude?.description;

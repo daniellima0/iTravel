@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import * as ExifReader from 'exifreader';
-import { LocationService } from '../../services/location.service';
+import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 
 @Component({
   standalone: true,
@@ -9,51 +9,66 @@ import { LocationService } from '../../services/location.service';
   styleUrls: ['./upload-photo-button.component.css'],
 })
 export class UploadPhotoButton {
-  constructor(private locationService: LocationService) {}
+  constructor(private photoService: PhotoService) {}
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+    const files = input.files;
 
-    if (!file) {
+    if (!files || files.length === 0) {
       console.log('No file selected.');
       return;
     }
 
-    const readExifData = async () => {
-      try {
-        // Read the file as an ArrayBuffer
-        const arrayBuffer = await file.arrayBuffer();
+    Array.from(files).forEach((file) => {
+      this.processFile(file);
+    });
+  }
 
-        // Extract EXIF data using ExifReader
-        const tags = ExifReader.load(arrayBuffer);
+  /**
+   * Process a single file to extract metadata and store it.
+   * @param file - The file to process
+   */
+  private async processFile(file: File): Promise<void> {
+    try {
+      // Read the file as an ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
 
-        // Log the extracted EXIF data to the console
-        console.log('Extracted EXIF data:', tags);
+      // Extract EXIF data using ExifReader
+      const tags = ExifReader.load(arrayBuffer);
 
-        // Extract latitude and longitude if available
-        const gpsLatitude = tags.GPSLatitude?.description;
-        const gpsLongitude = tags.GPSLongitude?.description;
+      // Extract latitude and longitude if available
+      const gpsLatitude = tags.GPSLatitude?.description;
+      const gpsLongitude = tags.GPSLongitude?.description;
 
-        if (gpsLatitude && gpsLongitude) {
-          console.log(`Latitude: ${gpsLatitude}`);
-          console.log(`Longitude: ${gpsLongitude}`);
+      // Create metadata object
+      const photoMetadata: PhotoMetadata = {
+        id: this.generateUniqueId(),
+        image: file, // Store the file object; you can convert it to base64 if needed
+        location:
+          gpsLatitude && gpsLongitude
+            ? {
+                latitude: Number(gpsLatitude),
+                longitude: Number(gpsLongitude),
+              }
+            : null,
+        createdAt: new Date(), // Current timestamp
+      };
 
-          // Sauvegarder la localisation dans le service
-          this.locationService.updateLocation({
-            longitude: Number(gpsLongitude),
-            latitude: Number(gpsLatitude),
-          });
+      // Add the photo to the PhotoService
+      this.photoService.addPhoto(photoMetadata);
 
-          console.log(this.locationService.location$);
-        } else {
-          console.log('GPS data not available in the image.');
-        }
-      } catch (error) {
-        console.error('Error reading EXIF data:', error);
-      }
-    };
+      console.log('Photo added to PhotoService:', photoMetadata);
+    } catch (error) {
+      console.error('Error processing file:', file.name, error);
+    }
+  }
 
-    readExifData();
+  /**
+   * Generate a unique ID for the photo.
+   * @returns A string representing a unique identifier
+   */
+  private generateUniqueId(): string {
+    return `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 }
