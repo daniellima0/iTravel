@@ -21,8 +21,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "./node_modules/leaflet/dist/images/",
-                "output": "./assets/images/leaflet"
+                "input": "public"
               }
             ],
             "styles": [

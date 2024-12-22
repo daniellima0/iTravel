@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 
-L.Icon.Default.imagePath = '/frontend/assets/images/leaflet';
-
 @Component({
   standalone: true,
   selector: 'map',
@@ -10,10 +8,20 @@ L.Icon.Default.imagePath = '/frontend/assets/images/leaflet';
   styleUrls: ['./map.component.css'],
 })
 export class Map implements OnInit, AfterViewInit {
+  icon = {
+    icon: L.icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 0],
+      // specify the path here
+      iconUrl: 'images/leaflet/marker-icon.png',
+      shadowUrl: 'images/leaflet/marker-shadow.png',
+    }),
+  };
+
   private map!: L.Map;
   markers: L.Marker[] = [
-    L.marker([43.786125, 11.250234]),
-    L.marker([43.762326, 11.261564]),
+    L.marker([43.786125, 11.250234], this.icon),
+    L.marker([43.762326, 11.261564], this.icon),
   ];
 
   constructor() {}
