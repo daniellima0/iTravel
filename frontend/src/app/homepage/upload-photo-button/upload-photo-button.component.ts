@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import * as ExifReader from 'exifreader';
+import { LocationService } from '../../services/location.service';
 
 @Component({
   standalone: true,
@@ -8,6 +9,8 @@ import * as ExifReader from 'exifreader';
   styleUrls: ['./upload-photo-button.component.css'],
 })
 export class UploadPhotoButton {
+  constructor(private locationService: LocationService) {}
+
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -35,6 +38,14 @@ export class UploadPhotoButton {
         if (gpsLatitude && gpsLongitude) {
           console.log(`Latitude: ${gpsLatitude}`);
           console.log(`Longitude: ${gpsLongitude}`);
+
+          // Sauvegarder la localisation dans le service
+          this.locationService.updateLocation({
+            longitude: Number(gpsLongitude),
+            latitude: Number(gpsLatitude),
+          });
+
+          console.log(this.locationService.location$);
         } else {
           console.log('GPS data not available in the image.');
         }

@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
+import { LocationService } from '../../services/location.service';
 
 @Component({
   standalone: true,
@@ -17,15 +18,19 @@ export class Map implements OnInit, AfterViewInit {
       shadowUrl: 'images/leaflet/marker-shadow.png',
     }),
   };
-  markers: L.Marker[] = [
-    L.marker([45.92295555555555, 6.131933333333333], this.icon),
-    L.marker([43.762326, 11.261564], this.icon),
-  ];
+
+  marker: L.Marker = L.marker([-13.004079, -38.461034], this.icon);
   geoJsonData = 'data/countries.geo.json';
 
-  constructor() {}
+  constructor(private locationService: LocationService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.locationService.location$.subscribe((location) => {
+      if (location) {
+        this.marker.setLatLng([location.latitude, location.longitude]);
+      }
+    });
+  }
 
   ngAfterViewInit() {
     this.initializeMap();
@@ -35,11 +40,9 @@ export class Map implements OnInit, AfterViewInit {
   }
 
   private initializeMap() {
-    // const baseMapURl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const baseMapURl =
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
     this.map = L.map('map');
-    // L.tileLayer(baseMapURl).addTo(this.map);
 
     L.tileLayer(baseMapURl, {
       attribution:
@@ -51,16 +54,17 @@ export class Map implements OnInit, AfterViewInit {
 
   private addMarkers() {
     // Add your markers to the map
-    this.markers.forEach((marker) => marker.addTo(this.map));
+    this.marker.addTo(this.map);
   }
 
   private centerMap() {
-    // Create a LatLngBounds object to encompass all the marker locations
-    const bounds = L.latLngBounds(
-      this.markers.map((marker) => marker.getLatLng())
-    );
+    // Obtenez la position du marqueur
+    const latLng = this.marker.getLatLng(); // Assurez-vous que marker est défini
 
-    // Fit the map view to the bounds
+    // Transformez-la en LatLngBounds
+    const bounds = L.latLngBounds([latLng]);
+
+    // Ajustez la carte
     this.map.fitBounds(bounds);
   }
 
