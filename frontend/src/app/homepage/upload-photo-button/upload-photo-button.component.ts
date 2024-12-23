@@ -37,9 +37,25 @@ export class UploadPhotoButton {
       // Extract EXIF data using ExifReader
       const tags = ExifReader.load(arrayBuffer);
 
+      console.log('EXIF data:', tags);
+
       // Extract latitude and longitude if available
-      const gpsLatitude = tags.GPSLatitude?.description;
-      const gpsLongitude = tags.GPSLongitude?.description;
+      let gpsLatitude = tags.GPSLatitude?.description;
+      let gpsLongitude = tags.GPSLongitude?.description;
+
+      var gpsLatitudeNumber = Number(gpsLatitude);
+      var gpsLongitudeNumber = Number(gpsLongitude);
+
+      if (tags.GPSLatitudeRef?.description === 'South latitude') {
+        gpsLatitudeNumber = -Number(gpsLatitude);
+      }
+
+      if (tags.GPSLongitudeRef?.description === 'West longitude') {
+        gpsLongitudeNumber = -Number(gpsLongitude);
+      }
+
+      console.log('gpsLatitudeNumber', gpsLatitudeNumber);
+      console.log('gpsLongitudeNumber', gpsLongitudeNumber);
 
       // Create metadata object
       const photoMetadata: PhotoMetadata = {
@@ -48,8 +64,8 @@ export class UploadPhotoButton {
         location:
           gpsLatitude && gpsLongitude
             ? {
-                latitude: Number(gpsLatitude),
-                longitude: Number(gpsLongitude),
+                latitude: gpsLatitudeNumber,
+                longitude: gpsLongitudeNumber,
               }
             : null,
         createdAt: new Date(), // Current timestamp

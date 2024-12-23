@@ -10,6 +10,7 @@ import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 })
 export class Map implements OnInit, AfterViewInit {
   private map!: L.Map;
+  private geoJsonLayer!: L.GeoJSON;
 
   private icon = {
     icon: L.icon({
@@ -62,6 +63,7 @@ export class Map implements OnInit, AfterViewInit {
 
       // Add markers for photos with location data
       photos.forEach((photo) => {
+        console.log('photo:', photo);
         if (photo.location) {
           const marker = L.marker(
             [photo.location.latitude, photo.location.longitude],
@@ -80,19 +82,24 @@ export class Map implements OnInit, AfterViewInit {
 
       // Center and fit the map to show all markers
       this.centerMap();
+
+      // Update the country colors based on marker locations
+      if (this.geoJsonLayer) {
+        this.geoJsonLayer.setStyle(this.getGeoJsonStyle());
+      }
     });
   }
 
   private centerMap() {
-    if (this.markers.length === 0) {
-      this.showWordlyView(); // Default to world view if no markers
-      return;
-    }
+    // if (this.markers.length === 0) {
+    this.showWordlyView(); // Default to world view if no markers
+    return;
+    // }
 
-    const bounds = L.latLngBounds(
-      this.markers.map((marker) => marker.getLatLng())
-    );
-    this.map.fitBounds(bounds);
+    // const bounds = L.latLngBounds(
+    //   this.markers.map((marker) => marker.getLatLng())
+    // );
+    // this.map.fitBounds(bounds);
   }
 
   private clearMarkers() {
@@ -113,17 +120,72 @@ export class Map implements OnInit, AfterViewInit {
         return response.json();
       })
       .then((geoJson) => {
-        L.geoJSON(geoJson, {
-          style: {
-            color: '#000000', // Border color
-            weight: 0.1,
-            fillColor: '#fff', // Initial fill color (white)
-            fillOpacity: 0,
-          },
+        this.geoJsonLayer = L.geoJSON(geoJson, {
+          style: this.getGeoJsonStyle(),
+          onEachFeature: this.onEachFeature.bind(this),
         }).addTo(this.map);
       })
       .catch((error) => {
         console.error('Error loading GeoJSON data:', error);
       });
+  }
+
+  private getGeoJsonStyle() {
+    return (feature: any) => {
+      const hasMarker = this.isCountryHighlighted(feature);
+      return {
+        color: '#000000', // Border color
+        weight: 0.1,
+        fillColor: hasMarker ? '#FF0000' : '#FFFFFF', // Highlight with red if it has a marker
+        fillOpacity: hasMarker ? 0.5 : 0.2,
+      };
+    };
+  }
+
+  private isCountryHighlighted(feature: any): boolean {
+    return this.markers.some((marker) => {
+      const latLng = marker.getLatLng();
+      const point = [latLng.lng, latLng.lat]; // [longitude, latitude] format
+
+      if (feature.geometry.type === 'Polygon') {
+        return this.isPointInPolygon(point, feature.geometry.coordinates[0]);
+      } else if (feature.geometry.type === 'MultiPolygon') {
+        // Check if the point is inside any polygon
+        return feature.geometry.coordinates.some((polygon: any) =>
+          this.isPointInPolygon(point, polygon[0])
+        );
+      }
+
+      return false; // Unsupported geometry types
+    });
+  }
+
+  // using ray casting algorithm
+  private isPointInPolygon(point: number[], polygon: number[][]): boolean {
+    let inside = false;
+    const [x, y] = point;
+
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const [xi, yi] = polygon[i]; // Current vertex
+      const [xj, yj] = polygon[j]; // Previous vertex
+
+      // Check if the point is inside the polygon edge
+      const intersect =
+        yi > y !== yj > y && // Is the point between the y-values of the edge
+        x < ((xj - xi) * (y - yi)) / (yj - yi) + xi; // Is the point to the left of the edge
+
+      if (intersect) inside = !inside;
+    }
+
+    return inside;
+  }
+
+  private onEachFeature(feature: any, layer: L.Layer) {
+    // Optional: Add interaction for country polygons if needed
+    layer.on({
+      click: () => {
+        console.log(`Clicked on country: ${feature.properties.name}`);
+      },
+    });
   }
 }
