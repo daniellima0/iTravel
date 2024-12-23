@@ -3,7 +3,6 @@ import * as L from 'leaflet';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 
 @Component({
-  standalone: true,
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],

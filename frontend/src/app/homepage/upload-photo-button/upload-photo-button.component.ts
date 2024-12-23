@@ -3,7 +3,6 @@ import * as ExifReader from 'exifreader';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 
 @Component({
-  standalone: true,
   selector: 'upload-photo-button',
   templateUrl: './upload-photo-button.component.html',
   styleUrls: ['./upload-photo-button.component.css'],
