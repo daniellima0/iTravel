@@ -1,7 +1,9 @@
-#map{
-  height: 80vh;
+#map {
+  width: 100%;
+  height: 80vh; /* Or a specific height, e.g., 600px */
+  position: relative; /* Ensure proper positioning */
 }
 
-.map-container{
+.map-container {
   border: 1px solid black;
 }

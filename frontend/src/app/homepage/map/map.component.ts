@@ -44,14 +44,6 @@ export class Map implements OnInit, AfterViewInit {
       subdomains: 'abcd',
       maxZoom: 19,
     }).addTo(this.map);
-
-    this.showWordlyView();
-  }
-
-  private showWordlyView() {
-    this.map.setView([0, 0], 0);
-    this.map.fitWorld();
-    this.map.zoomIn(2);
   }
 
   private addMarkers() {
@@ -91,7 +83,12 @@ export class Map implements OnInit, AfterViewInit {
 
   private centerMap() {
     // if (this.markers.length === 0) {
-    this.showWordlyView(); // Default to world view if no markers
+    this.map.setView([20, -5], 3); // Default to world view if no markers
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 250);
+
     return;
     // }
 
