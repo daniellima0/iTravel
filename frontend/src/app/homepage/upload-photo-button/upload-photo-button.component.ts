@@ -36,35 +36,30 @@ export class UploadPhotoButton {
       // Extract EXIF data using ExifReader
       const tags = ExifReader.load(arrayBuffer);
 
-      console.log('EXIF data:', tags);
-
       // Extract latitude and longitude if available
-      let gpsLatitude = tags.GPSLatitude?.description;
       let gpsLongitude = tags.GPSLongitude?.description;
+      let gpsLatitude = tags.GPSLatitude?.description;
 
-      var gpsLatitudeNumber = Number(gpsLatitude);
       var gpsLongitudeNumber = Number(gpsLongitude);
-
-      if (tags.GPSLatitudeRef?.description === 'South latitude') {
-        gpsLatitudeNumber = -Number(gpsLatitude);
-      }
+      var gpsLatitudeNumber = Number(gpsLatitude);
 
       if (tags.GPSLongitudeRef?.description === 'West longitude') {
         gpsLongitudeNumber = -Number(gpsLongitude);
       }
 
-      console.log('gpsLatitudeNumber', gpsLatitudeNumber);
-      console.log('gpsLongitudeNumber', gpsLongitudeNumber);
+      if (tags.GPSLatitudeRef?.description === 'South latitude') {
+        gpsLatitudeNumber = -Number(gpsLatitude);
+      }
 
       // Create metadata object
       const photoMetadata: PhotoMetadata = {
         id: this.generateUniqueId(),
         image: file, // Store the file object; you can convert it to base64 if needed
         location:
-          gpsLatitude && gpsLongitude
+          gpsLongitude && gpsLatitude
             ? {
-                latitude: gpsLatitudeNumber,
                 longitude: gpsLongitudeNumber,
+                latitude: gpsLatitudeNumber,
               }
             : null,
         createdAt: new Date(), // Current timestamp
@@ -72,8 +67,6 @@ export class UploadPhotoButton {
 
       // Add the photo to the PhotoService
       this.photoService.addPhoto(photoMetadata);
-
-      console.log('Photo added to PhotoService:', photoMetadata);
     } catch (error) {
       console.error('Error processing file:', file.name, error);
     }

@@ -21,7 +21,9 @@ export class Map implements OnInit, AfterViewInit {
   };
 
   private geoJsonData = 'data/countries.geo.json';
-  private markers: L.Marker[] = []; // To store all markers
+  private markers: L.Marker[] = [];
+
+  private countriesIndex: { [key: string]: any } = {}; // Armazena a geometria de cada país por nome
 
   constructor(private photoService: PhotoService) {}
 
@@ -54,7 +56,6 @@ export class Map implements OnInit, AfterViewInit {
 
       // Add markers for photos with location data
       photos.forEach((photo) => {
-        console.log('photo:', photo);
         if (photo.location) {
           const marker = L.marker(
             [photo.location.latitude, photo.location.longitude],
@@ -82,20 +83,15 @@ export class Map implements OnInit, AfterViewInit {
   }
 
   private centerMap() {
-    // if (this.markers.length === 0) {
-    this.map.setView([20, -5], 3); // Default to world view if no markers
+    // Centralize map view to show all markers
+    this.map.setView([20, -5], 3);
 
+    // Delay to wait for the map to render
     setTimeout(() => {
       this.map.invalidateSize();
     }, 250);
 
     return;
-    // }
-
-    // const bounds = L.latLngBounds(
-    //   this.markers.map((marker) => marker.getLatLng())
-    // );
-    // this.map.fitBounds(bounds);
   }
 
   private clearMarkers() {
@@ -120,6 +116,11 @@ export class Map implements OnInit, AfterViewInit {
           style: this.getGeoJsonStyle(),
           onEachFeature: this.onEachFeature.bind(this),
         }).addTo(this.map);
+
+        // Criar o índice de países
+        geoJson.features.forEach((feature: any) => {
+          this.countriesIndex[feature.properties.name] = feature.geometry;
+        });
       })
       .catch((error) => {
         console.error('Error loading GeoJSON data:', error);
@@ -177,11 +178,58 @@ export class Map implements OnInit, AfterViewInit {
   }
 
   private onEachFeature(feature: any, layer: L.Layer) {
-    // Optional: Add interaction for country polygons if needed
     layer.on({
       click: () => {
-        console.log(`Clicked on country: ${feature.properties.name}`);
+        const countryName = feature.properties.name;
+        console.log(`Clicked on country: ${countryName}`);
+
+        // Get the bounding box of the clicked country
+        const bounds = L.geoJSON(feature).getBounds();
+        // Fit the map view to the bounding box
+        this.map.fitBounds(bounds);
+
+        // Filtrar as fotos do país
+        this.filterPhotosByCountry(countryName);
       },
     });
+  }
+
+  private filterPhotosByCountry(countryName: string) {
+    // Get the most recent photos
+    this.photoService.photos$.subscribe((photos: PhotoMetadata[]) => {
+      // Get the country's geometry
+      const countryGeometry = this.countriesIndex[countryName];
+
+      if (!countryGeometry) {
+        console.error(`Geometry not found for country: ${countryName}`);
+        return;
+      }
+
+      // Filter photos within the country
+      const photosInCountry = photos.filter((photo) => {
+        if (photo.location) {
+          const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
+
+          if (countryGeometry.type === 'Polygon') {
+            return this.isPointInPolygon(point, countryGeometry.coordinates[0]);
+          } else if (countryGeometry.type === 'MultiPolygon') {
+            // Check all polygons in the multi-polygon
+            return countryGeometry.coordinates.some((polygon: any) =>
+              this.isPointInPolygon(point, polygon[0])
+            );
+          }
+        }
+        return false;
+      });
+
+      // Open the modal with the filtered photos
+      this.openModalWithPhotos(photosInCountry);
+    });
+  }
+
+  private openModalWithPhotos(photos: PhotoMetadata[]) {
+    // Aqui você pode abrir o modal e passar as fotos para um componente de carousel
+    console.log('Opening modal with photos:', photos);
+    // Implemente a lógica do modal/carrossel aqui
   }
 }
