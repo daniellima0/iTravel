@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'map',
@@ -196,35 +197,40 @@ export class Map implements OnInit, AfterViewInit {
 
   private filterPhotosByCountry(countryName: string) {
     // Get the most recent photos
-    this.photoService.photos$.subscribe((photos: PhotoMetadata[]) => {
-      // Get the country's geometry
-      const countryGeometry = this.countriesIndex[countryName];
+    this.photoService.photos$
+      .pipe(take(1))
+      .subscribe((photos: PhotoMetadata[]) => {
+        // Get the country's geometry
+        const countryGeometry = this.countriesIndex[countryName];
 
-      if (!countryGeometry) {
-        console.error(`Geometry not found for country: ${countryName}`);
-        return;
-      }
-
-      // Filter photos within the country
-      const photosInCountry = photos.filter((photo) => {
-        if (photo.location) {
-          const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
-
-          if (countryGeometry.type === 'Polygon') {
-            return this.isPointInPolygon(point, countryGeometry.coordinates[0]);
-          } else if (countryGeometry.type === 'MultiPolygon') {
-            // Check all polygons in the multi-polygon
-            return countryGeometry.coordinates.some((polygon: any) =>
-              this.isPointInPolygon(point, polygon[0])
-            );
-          }
+        if (!countryGeometry) {
+          console.error(`Geometry not found for country: ${countryName}`);
+          return;
         }
-        return false;
-      });
 
-      // Open the modal with the filtered photos
-      this.openModalWithPhotos(photosInCountry);
-    });
+        // Filter photos within the country
+        const photosInCountry = photos.filter((photo) => {
+          if (photo.location) {
+            const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
+
+            if (countryGeometry.type === 'Polygon') {
+              return this.isPointInPolygon(
+                point,
+                countryGeometry.coordinates[0]
+              );
+            } else if (countryGeometry.type === 'MultiPolygon') {
+              // Check all polygons in the multi-polygon
+              return countryGeometry.coordinates.some((polygon: any) =>
+                this.isPointInPolygon(point, polygon[0])
+              );
+            }
+          }
+          return false;
+        });
+
+        // Open the modal with the filtered photos
+        this.openModalWithPhotos(photosInCountry);
+      });
   }
 
   private openModalWithPhotos(photos: PhotoMetadata[]) {
