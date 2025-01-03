@@ -1,18 +1,22 @@
 <div mat-dialog-content>
-  <h2>{{ data.countryName }}</h2>
-  <div *ngIf="data.photos.length > 0; else noPhotos" class="keen-slider">
-    <div *ngFor="let photo of data.photos" class="keen-slider__slide">
+  <h2 class="country-title">{{ data.countryName }}</h2>
+  <div *ngIf="photos.length > 0; else noPhotos" class="keen-slider">
+    <div *ngFor="let photo of photos" class="keen-slider__slide">
       <img [src]="photo.url" alt="Photo" class="photo" />
       <div class="caption">
         <p><strong>Photo ID:</strong> {{ photo.id }}</p>
-        <p><strong>Timestamp:</strong> {{ photo.createdAt }}</p>
+        <p>
+          <strong>Timestamp:</strong> {{ photo.createdAt | date : "medium" }}
+        </p>
       </div>
     </div>
   </div>
   <ng-template #noPhotos>
-    <p>No photos here yet :( Book a flight!</p>
+    <p class="no-photos">No photos here yet 😔 Book a flight!</p>
   </ng-template>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Close</button>
+  <button mat-button mat-stroked-button color="primary" (click)="close()">
+    Close
+  </button>
 </div>
