@@ -1,13 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import * as ExifReader from 'exifreader';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
-// import {
-//   getStorage,
-//   ref,
-//   uploadBytes,
-//   getDownloadURL,
-// } from '@angular/fire/storage'; // Import the modular functions
-import { v4 as uuidv4 } from 'uuid'; // Using uuid for a unique file name
+import { v4 as uuidv4 } from 'uuid';
 import {
   Storage,
   ref,
