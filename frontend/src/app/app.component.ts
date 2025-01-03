@@ -3,10 +3,10 @@ import { RouterOutlet } from '@angular/router';
 import { Homepage } from './homepage/homepage.component';
 
 @Component({
-    selector: 'app-root',
-    imports: [RouterOutlet, Homepage],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
+  standalone: true,
+  selector: 'app-root',
+  imports: [RouterOutlet, Homepage],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-}
+export class AppComponent {}

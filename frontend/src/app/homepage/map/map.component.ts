@@ -2,8 +2,11 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
 import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { PhotoModalComponent } from '../photo-modal/photo-modal.component';
 
 @Component({
+  standalone: true,
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
@@ -26,7 +29,7 @@ export class Map implements OnInit, AfterViewInit {
 
   private countriesIndex: { [key: string]: any } = {}; // Armazena a geometria de cada país por nome
 
-  constructor(private photoService: PhotoService) {}
+  constructor(private photoService: PhotoService, private dialog: MatDialog) {}
 
   ngOnInit() {}
 
@@ -234,8 +237,11 @@ export class Map implements OnInit, AfterViewInit {
   }
 
   private openModalWithPhotos(photos: PhotoMetadata[]) {
-    // Aqui você pode abrir o modal e passar as fotos para um componente de carousel
-    console.log('Opening modal with photos:', photos);
-    // Implemente a lógica do modal/carrossel aqui
+    this.dialog.open(PhotoModalComponent, {
+      data: {
+        photos: photos,
+        countryName: 'Country Name',
+      },
+    });
   }
 }

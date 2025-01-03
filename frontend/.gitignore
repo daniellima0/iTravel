@@ -43,3 +43,7 @@ Thumbs.db
 
 # Data
 /public/data
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

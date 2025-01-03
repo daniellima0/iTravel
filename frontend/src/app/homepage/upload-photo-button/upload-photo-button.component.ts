@@ -1,14 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import * as ExifReader from 'exifreader';
 import { PhotoService, PhotoMetadata } from '../../services/photo.service';
+// import {
+//   getStorage,
+//   ref,
+//   uploadBytes,
+//   getDownloadURL,
+// } from '@angular/fire/storage'; // Import the modular functions
+import { v4 as uuidv4 } from 'uuid'; // Using uuid for a unique file name
+import {
+  Storage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from '@angular/fire/storage';
 
 @Component({
+  standalone: true,
   selector: 'upload-photo-button',
   templateUrl: './upload-photo-button.component.html',
   styleUrls: ['./upload-photo-button.component.css'],
 })
 export class UploadPhotoButton {
-  constructor(private photoService: PhotoService) {}
+  constructor(
+    private photoService: PhotoService,
+    private storage: Storage // Inject the storage service
+  ) {}
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -51,10 +68,17 @@ export class UploadPhotoButton {
         gpsLatitudeNumber = -Number(gpsLatitude);
       }
 
-      // Create metadata object
+      const fileName = this.generateUniqueId();
+      const storageRef = ref(this.storage, `photos/${fileName}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      console.log('Uploaded a blob or file!', snapshot);
+
+      const photoUrl = await getDownloadURL(storageRef);
+      console.log('Photo URL:', photoUrl);
+
       const photoMetadata: PhotoMetadata = {
         id: this.generateUniqueId(),
-        image: file, // Store the file object; you can convert it to base64 if needed
+        image: photoUrl,
         location:
           gpsLongitude && gpsLatitude
             ? {
@@ -62,10 +86,9 @@ export class UploadPhotoButton {
                 latitude: gpsLatitudeNumber,
               }
             : null,
-        createdAt: new Date(), // Current timestamp
+        createdAt: new Date(),
       };
 
-      // Add the photo to the PhotoService
       this.photoService.addPhoto(photoMetadata);
     } catch (error) {
       console.error('Error processing file:', file.name, error);
@@ -77,6 +100,6 @@ export class UploadPhotoButton {
    * @returns A string representing a unique identifier
    */
   private generateUniqueId(): string {
-    return `photo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return uuidv4(); // Use UUID for generating a unique ID
   }
 }
