@@ -1,9 +1,10 @@
 .navbar {
   display: flex;
+  height: 49px; /* total height minus the bottom border */
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  border-bottom: 1px solid #ccc; /* Ligne mince dessous */
+  padding: 0 20px;
+  border-bottom: 1px solid #000000; /* Ligne mince dessous */
   background-color: #fff;
 }
 

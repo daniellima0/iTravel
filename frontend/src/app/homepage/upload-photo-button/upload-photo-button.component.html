@@ -1,8 +1,22 @@
-<input
-  type="file"
-  id="fileInput"
-  accept="image/*"
-  name="photosUploaded"
-  multiple
-  (change)="onFileChange($event)"
-/>
+<div class="upload-photo-button-container">
+  <!-- Floating action button with a plus icon -->
+  <button
+    mat-fab
+    color="primary"
+    (click)="fileInput.click()"
+    aria-label="Upload Photo"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <!-- File input, hidden but triggered by the FAB -->
+  <input
+    type="file"
+    id="fileInput"
+    accept="image/*"
+    name="photosUploaded"
+    multiple
+    (change)="onFileChange($event)"
+    #fileInput
+    hidden
+  />
+</div>

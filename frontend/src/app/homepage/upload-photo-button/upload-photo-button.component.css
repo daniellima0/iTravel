@@ -1,0 +1,27 @@
+.upload-photo-button-container {
+  position: absolute;
+  bottom: 40px; /* Distance from the bottom of the map */
+  right: 30px; /* Distance from the right side of the map */
+  z-index: 10; /* Ensure it's above the map */
+}
+
+button[mat-fab] {
+  width: 56px; /* Standard FAB size */
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #7fbef5; /* Apply your custom color */
+  border-radius: 50%; /* Ensure the button is a perfect circle */
+  color: white; /* White icon color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow */
+  padding: 0;
+}
+
+mat-icon {
+  font-size: 24px; /* Icon size inside the button */
+}
+
+button[mat-fab]:hover {
+  background-color: #65a9c4; /* Darker shade for hover effect */
+}

@@ -1,5 +1,3 @@
-p {
-  font-size: 2rem;
-  font-weight: bold;
-  color: blue;
+#homepage-container {
+  height: 100%;
 }

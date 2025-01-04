@@ -8,12 +8,15 @@ import {
   uploadBytes,
   getDownloadURL,
 } from '@angular/fire/storage';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
   selector: 'upload-photo-button',
   templateUrl: './upload-photo-button.component.html',
   styleUrls: ['./upload-photo-button.component.css'],
+  imports: [MatButtonModule, MatIconModule],
 })
 export class UploadPhotoButton {
   constructor(
