@@ -1,23 +1,47 @@
 /* Modal container */
 .photo-modal-container {
-  position: fixed; /* Ensures it stays on top and is not affected by the map */
-  top: 50%; /* Centers vertically */
-  left: 50%; /* Centers horizontally */
-  width: 80%;
-  height: 80vh; /* 90% of the viewport height */
-  transform: translate(
-    -50%,
-    -50%
-  ); /* Offsets the modal by 50% of its width and height */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 85vh;
   max-width: 900px;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Soft shadow for a floating effect */
-  border-radius: 16px; /* Slightly larger border-radius for a softer look */
-  z-index: 10000; /* High z-index to appear above all other elements */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  z-index: 10000;
   font-family: "Helvetica Neue", Arial, sans-serif;
   display: flex;
   flex-direction: column;
   padding: 1rem;
+}
+
+/* Arrows styling */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  font-size: 1.5rem;
+}
+
+.arrow-left {
+  left: 10px;
+}
+
+.arrow-right {
+  right: 10px;
+}
+
+.arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* Title styling */
@@ -31,16 +55,21 @@
 }
 
 /* Photo slider */
-.keen-slider {
+.slider {
   height: 100%;
   margin: 0;
+  padding-bottom: 2rem;
   position: relative;
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+  gap: 2rem;
+  justify-content: flex-start; /* Align items to the left to avoid gaps */
+  width: 100%; /* Ensure the container is taking full width */
+  overflow-x: auto; /* Enables horizontal scrolling */
+  scroll-snap-type: x mandatory; /* Adds smooth snapping between slides */
 }
 
-.keen-slider__slide {
+/* Ensures the slides have a fixed width and don't shrink */
+.slider__slide {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,29 +78,20 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: white;
-  border-color: 1px solid black;
   padding: 0 2rem;
-  height: 100%;
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 300px; /* Fixed width for each slide */
+  margin: 0; /* Remove margin that could cause misalignment */
+  scroll-snap-align: start; /* Align the slides to the left */
 }
-
-/* .keen-slider__slide:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-} */
 
 /* Image styling */
 .photo {
-  width: 100%; /* Make the image width responsive */
-  height: 100%; /* Make the image fill the container's height */
+  width: 100%; /* Ensure the image fills the width of its container */
+  height: 320px; /* Set a fixed height for the image */
   object-fit: cover; /* Ensures the image covers the space without distortion */
   border-radius: 12px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* .photo:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-} */
 
 /* Caption text */
 .caption {

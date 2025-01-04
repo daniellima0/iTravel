@@ -7,7 +7,6 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 import { CommonModule } from '@angular/common';
 import { PhotoService } from '../../services/photo.service';
 import { Subscription } from 'rxjs';
@@ -25,7 +24,6 @@ export interface PhotoModalData {
   imports: [CommonModule],
 })
 export class PhotoModalComponent implements OnInit, OnDestroy, AfterViewInit {
-  slider: KeenSliderInstance | null = null;
   photos: { id: string; createdAt: string; url: string }[] = [];
   private photosSubscription: Subscription | null = null;
 
@@ -43,37 +41,12 @@ export class PhotoModalComponent implements OnInit, OnDestroy, AfterViewInit {
         createdAt: photo.createdAt.toString(),
         url: photo.image.toString(),
       }));
-      this.initSlider();
     });
   }
 
-  ngAfterViewInit(): void {
-    this.initSlider();
-  }
-
-  private initSlider(): void {
-    const sliderContainer =
-      this.elementRef.nativeElement.querySelector('.keen-slider');
-    if (sliderContainer) {
-      this.slider = new KeenSlider(sliderContainer, {
-        loop: false,
-        slides: { perView: 1 },
-        breakpoints: {
-          '(min-width: 768px)': {
-            slides: { perView: 2 },
-          },
-          '(min-width: 1200px)': {
-            slides: { perView: 3 },
-          },
-        },
-      });
-    }
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
-    if (this.slider) {
-      this.slider.destroy();
-    }
     if (this.photosSubscription) {
       this.photosSubscription.unsubscribe();
     }

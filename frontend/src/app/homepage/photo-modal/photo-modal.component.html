@@ -4,10 +4,11 @@
       X
     </button>
   </div>
+
   <div mat-dialog-content>
     <h2 class="country-title">{{ data.countryName }}</h2>
-    <div *ngIf="photos.length > 0; else noPhotos" class="keen-slider">
-      <div *ngFor="let photo of photos" class="keen-slider__slide">
+    <div *ngIf="photos.length > 0; else noPhotos" class="slider">
+      <div *ngFor="let photo of photos" class="slider__slide">
         <div class="caption">
           <p><strong>Date:</strong> {{ photo.createdAt | date : "medium" }}</p>
         </div>
