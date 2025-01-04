@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-account',
@@ -15,15 +16,30 @@ export class CreateAccountComponent {
   password: string = '';
   confirmPassword: string = '';
 
+  constructor(private http: HttpClient) {}
+
   onSubmit(): void {
-    // Logic for handling account creation submission
     if (this.password !== this.confirmPassword) {
       console.log('Passwords do not match');
       return;
     }
 
-    console.log('Username:', this.username);
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
+    const payload = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+    };
+
+    this.http.post('http://localhost:3000/users', payload).subscribe({
+      next: (response: any) => {
+        console.log('User created successfully:', response);
+        // Save the JWT in local storage
+        localStorage.setItem('authToken', response.token);
+        alert('Account created successfully!');
+      },
+      error: (err) => {
+        console.error('Error creating user:', err);
+      },
+    });
   }
 }

@@ -1,6 +1,11 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const { createUser, getAllUsers } = require("../models/user"); // Import the model
+const authenticateToken = require("../middleware/authenticateToken");
+
 const router = express.Router();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // GET all users
 router.get("/", async (req, res) => {
@@ -26,18 +31,29 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await createUser(username, email, password);
+
+    // Create a JWT payload
+    const payload = {
+      id: result.insertedId,
+      username,
+      email,
+    };
+
+    // Sign the JWT
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }); // Token expires in 1 hour
+
     res.status(201).json({
       message: "User created successfully",
-      user: {
-        _id: result.insertedId,
-        username,
-        email,
-      },
+      token, // Return the token to the client
     });
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ message: "Error creating user" });
   }
+});
+
+router.get("/protected", authenticateToken, (req, res) => {
+  res.json({ message: "This is a protected route", user: req.user });
 });
 
 module.exports = router;

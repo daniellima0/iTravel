@@ -1,34 +1,26 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) {}
 
-  // Register user
-  register(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, {
-      username,
-      email,
-      password,
-    });
+  // Check if user is logged in
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('authToken');
   }
 
-  // Login user
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password });
+  // Logout user
+  logout(): void {
+    localStorage.removeItem('authToken');
   }
 
-  // Home page (protected route)
-  getHome(token: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/home`, {
-      headers: { Authorization: token },
-    });
+  // Get the token
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
   }
 }
