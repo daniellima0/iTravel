@@ -17,4 +17,18 @@ router.get("/status", authenticateToken, (req, res) => {
   });
 });
 
+// Logout route to clear the authToken cookie
+router.post("/logout", (req, res) => {
+  // Clear the authToken cookie by setting it to an empty value and expiring it immediately
+  res.cookie("authToken", "", {
+    httpOnly: true, // Ensure the cookie is not accessible via JavaScript
+    secure: false, // Set to true if you're using HTTPS
+    maxAge: 0, // Expire the cookie immediately
+    sameSite: "Strict", // Mitigates CSRF attacks
+  });
+
+  // Send response confirming logout
+  res.status(200).json({ message: "Successfully logged out" });
+});
+
 module.exports = router;
