@@ -67,11 +67,9 @@ export class UploadPhotoButton {
 
       // Extract the creation date from EXIF data (if available)
       const creationDate = tags.DateTimeOriginal?.description;
-      console.log(creationDate);
       const convertedDate = creationDate
         ?.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3')
         .replace(' ', 'T');
-      console.log(convertedDate);
       const createdAt = convertedDate ? new Date(convertedDate) : new Date();
 
       const fileName = this.generateUniqueId();
