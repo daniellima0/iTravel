@@ -10,6 +10,8 @@ import {
 } from '@angular/fire/storage';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpClient } from '@angular/common/http';
+// import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to handle authentication
 
 @Component({
   standalone: true,
@@ -21,8 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
 export class UploadPhotoButton {
   constructor(
     private photoService: PhotoService,
-    private storage: Storage // Inject the storage service
-  ) {}
+    private storage: Storage, // Inject the storage service
+    private http: HttpClient // Inject the HTTP client to make API requests
+  ) // private authService: AuthService // Inject the AuthService to get the current user's info
+  {}
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;

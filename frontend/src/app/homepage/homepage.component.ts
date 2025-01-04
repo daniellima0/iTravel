@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Navbar } from './navbar/navbar.component';
 import { Map } from './map/map.component';
 import { UploadPhotoButton } from './upload-photo-button/upload-photo-button.component';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   standalone: true,
@@ -13,19 +13,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./homepage.component.css'],
 })
 export class Homepage {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.http
-      .get('http://localhost:3000/auth/status', { withCredentials: true })
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (err) => {
-          console.log('Not authenticated');
-          this.router.navigate(['login']);
-        },
-      });
+    this.authService.checkAuthStatus().subscribe({
+      next: (response) => {
+        console.log('Authenticated:', response);
+      },
+      error: (err) => {
+        console.log('Not authenticated');
+        this.router.navigate(['login']);
+      },
+    });
   }
 }

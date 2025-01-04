@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-create-account',
@@ -17,20 +17,13 @@ export class CreateAccountComponent {
   password: string = '';
   confirmPassword: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.http
-      .get('http://localhost:3000/auth/status', { withCredentials: true })
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-          this.router.navigate(['']);
-        },
-        error: (err) => {
-          console.log('Not authenticated');
-        },
-      });
+    this.authService.checkAuthStatus().subscribe({
+      next: () => this.router.navigate(['']),
+      error: () => console.log('Not authenticated'),
+    });
   }
 
   onSubmit(): void {
@@ -45,17 +38,12 @@ export class CreateAccountComponent {
       password: this.password,
     };
 
-    this.http
-      .post('http://localhost:3000/auth/register', payload, {
-        withCredentials: true,
-      })
+    this.authService
+      .register(this.username, this.email, this.password)
       .subscribe({
-        next: (response: any) => {
+        next: (response) => {
           console.log('User created successfully:', response);
-
-          // Navigate to the homepage after successful account creation
           this.router.navigate(['']);
-
           alert('Account created successfully!');
         },
         error: (err) => {
