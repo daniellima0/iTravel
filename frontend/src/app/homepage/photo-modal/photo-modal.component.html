@@ -1,22 +1,26 @@
-<div mat-dialog-content>
-  <h2 class="country-title">{{ data.countryName }}</h2>
-  <div *ngIf="photos.length > 0; else noPhotos" class="keen-slider">
-    <div *ngFor="let photo of photos" class="keen-slider__slide">
-      <img [src]="photo.url" alt="Photo" class="photo" />
-      <div class="caption">
-        <p><strong>Photo ID:</strong> {{ photo.id }}</p>
-        <p>
-          <strong>Timestamp:</strong> {{ photo.createdAt | date : "medium" }}
+<div class="photo-modal-container">
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-stroked-button color="primary" (click)="close()">
+      X
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <h2 class="country-title">{{ data.countryName }}</h2>
+    <div *ngIf="photos.length > 0; else noPhotos" class="keen-slider">
+      <div *ngFor="let photo of photos" class="keen-slider__slide">
+        <div class="caption">
+          <p><strong>Date:</strong> {{ photo.createdAt | date : "medium" }}</p>
+        </div>
+        <img [src]="photo.url" alt="Photo" class="photo" />
+        <p class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          aliquet libero non condimentum condimentum. Duis tristique purus
+          egestas sapien sodales porttitor.
         </p>
       </div>
     </div>
+    <ng-template #noPhotos>
+      <p class="no-photos">No photos here yet 😔 Book a flight!</p>
+    </ng-template>
   </div>
-  <ng-template #noPhotos>
-    <p class="no-photos">No photos here yet 😔 Book a flight!</p>
-  </ng-template>
-</div>
-<div mat-dialog-actions align="end">
-  <button mat-button mat-stroked-button color="primary" (click)="close()">
-    Close
-  </button>
 </div>

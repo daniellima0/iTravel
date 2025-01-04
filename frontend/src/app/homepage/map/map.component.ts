@@ -232,16 +232,19 @@ export class Map implements OnInit, AfterViewInit {
         });
 
         // Open the modal with the filtered photos
-        this.openModalWithPhotos(photosInCountry);
+        this.openModalWithPhotos(photosInCountry, countryName);
       });
   }
 
-  private openModalWithPhotos(photos: PhotoMetadata[]) {
-    this.dialog.open(PhotoModalComponent, {
-      data: {
-        photos: photos,
-        countryName: 'Country Name',
-      },
-    });
+  private openModalWithPhotos(photos: PhotoMetadata[], countryName: string) {
+    // Set a delay of 1 second (1000ms) before opening the modal
+    setTimeout(() => {
+      this.dialog.open(PhotoModalComponent, {
+        data: {
+          photos: photos,
+          countryName: countryName,
+        },
+      });
+    }, 1000); // 1000ms delay
   }
 }

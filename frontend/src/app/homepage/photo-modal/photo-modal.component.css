@@ -1,40 +1,43 @@
+/* Modal container */
 .photo-modal-container {
   position: fixed; /* Ensures it stays on top and is not affected by the map */
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, -10%);
-  width: 90%;
-  max-width: 800px;
-  background: rgba(
-    255,
-    255,
-    255,
-    0.95
-  ); /* Slight transparency for better aesthetics */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  overflow: hidden;
+  top: 50%; /* Centers vertically */
+  left: 50%; /* Centers horizontally */
+  width: 80%;
+  height: 80vh; /* 90% of the viewport height */
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Offsets the modal by 50% of its width and height */
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Soft shadow for a floating effect */
+  border-radius: 16px; /* Slightly larger border-radius for a softer look */
   z-index: 10000; /* High z-index to appear above all other elements */
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
 }
 
-.photo-modal-content {
-  padding: 1.5rem;
-  text-align: center;
-}
-
+/* Title styling */
 .country-title {
   font-size: 1.8rem;
   font-weight: bold;
+  margin: 0;
   margin-bottom: 1rem;
   color: #333;
+  text-align: center;
 }
 
+/* Photo slider */
 .keen-slider {
-  margin: 0 auto;
+  height: 100%;
+  margin: 0;
   position: relative;
-  max-width: 100%;
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
+  justify-content: center;
 }
 
 .keen-slider__slide {
@@ -42,46 +45,86 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-color: 1px solid black;
+  padding: 0 2rem;
+  height: 100%;
 }
 
+/* .keen-slider__slide:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+} */
+
+/* Image styling */
 .photo {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
+  width: 100%; /* Make the image width responsive */
+  height: 100%; /* Make the image fill the container's height */
+  object-fit: cover; /* Ensures the image covers the space without distortion */
+  border-radius: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.photo:hover {
+/* .photo:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+} */
 
+/* Caption text */
 .caption {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #666;
+  text-align: center;
 }
 
+/* No photos message */
 .no-photos {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #888;
-  margin-top: 2rem;
   font-style: italic;
+  text-align: center;
 }
 
-.modal-actions {
-  padding: 1rem;
-  border-top: 1px solid #ddd;
-  background: #f7f7f7;
-}
-
+/* Button styling */
 button {
   font-size: 1rem;
   font-weight: bold;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 0.75rem;
   border-radius: 8px;
+  background-color: #7fbef5;
+  color: white;
+  border: none;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #65a9c4;
+}
+
+/* Modal footer */
+.mat-dialog-actions {
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+  background: #f7f7f7;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mat-dialog-actions button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.mat-dialog-actions button:hover {
+  background-color: #0056b3;
 }
