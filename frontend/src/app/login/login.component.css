@@ -83,3 +83,24 @@
 .submit-btn:hover {
   background-color: #3578b8;
 }
+
+.create-account-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.create-account-link a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.create-account-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}

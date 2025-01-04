@@ -46,7 +46,7 @@ export class CreateAccountComponent {
     };
 
     this.http
-      .post('http://localhost:3000/users/register', payload, {
+      .post('http://localhost:3000/auth/register', payload, {
         withCredentials: true,
       })
       .subscribe({

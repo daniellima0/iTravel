@@ -27,6 +27,14 @@
         />
       </div>
       <button type="submit" class="submit-btn">Login</button>
+      <!-- Display error message if login fails -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+      <p class="create-account-link">
+        Don't have an account?
+        <a routerLink="/create-account">Create one</a>
+      </p>
     </form>
   </div>
 </div>
