@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-account',
@@ -16,7 +17,21 @@ export class CreateAccountComponent {
   password: string = '';
   confirmPassword: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  ngOnInit(): void {
+    this.http
+      .get('http://localhost:3000/auth/status', { withCredentials: true })
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+          this.router.navigate(['']);
+        },
+        error: (err) => {
+          console.log('Not authenticated');
+        },
+      });
+  }
 
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {
@@ -30,16 +45,22 @@ export class CreateAccountComponent {
       password: this.password,
     };
 
-    this.http.post('http://localhost:3000/users', payload).subscribe({
-      next: (response: any) => {
-        console.log('User created successfully:', response);
-        // Save the JWT in local storage
-        localStorage.setItem('authToken', response.token);
-        alert('Account created successfully!');
-      },
-      error: (err) => {
-        console.error('Error creating user:', err);
-      },
-    });
+    this.http
+      .post('http://localhost:3000/users/register', payload, {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (response: any) => {
+          console.log('User created successfully:', response);
+
+          // Navigate to the homepage after successful account creation
+          this.router.navigate(['']);
+
+          alert('Account created successfully!');
+        },
+        error: (err) => {
+          console.error('Error creating user:', err);
+        },
+      });
   }
 }
