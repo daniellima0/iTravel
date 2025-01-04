@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div id="wrapper">
+  <div class="login-container">
+    <div class="logo-section">
+      <img src="images/logo.png" alt="iTravel Logo" class="logo" />
+      <p class="website-name">iTravel</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="username"
+          name="username"
+          required
+        />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+        />
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+  </div>
+</div>
