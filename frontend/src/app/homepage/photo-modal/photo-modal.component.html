@@ -14,9 +14,7 @@
         </div>
         <img [src]="photo.url" alt="Photo" class="photo" />
         <p class="description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          aliquet libero non condimentum condimentum. Duis tristique purus
-          egestas sapien sodales porttitor.
+          {{ photo.description ? photo.description : "" }}
         </p>
       </div>
     </div>

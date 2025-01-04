@@ -12,7 +12,12 @@ import { PhotoService } from '../../services/photo.service';
 import { Subscription } from 'rxjs';
 
 export interface PhotoModalData {
-  photos: { id: string; createdAt: string; url: string }[];
+  photos: {
+    id: string;
+    createdAt: string;
+    url: string;
+    description?: string;
+  }[];
   countryName: string;
 }
 
@@ -24,7 +29,12 @@ export interface PhotoModalData {
   imports: [CommonModule],
 })
 export class PhotoModalComponent implements OnInit, OnDestroy, AfterViewInit {
-  photos: { id: string; createdAt: string; url: string }[] = [];
+  photos: {
+    id: string;
+    createdAt: string;
+    url: string;
+    description?: string;
+  }[] = [];
   private photosSubscription: Subscription | null = null;
 
   constructor(
