@@ -32,8 +32,6 @@ router.post("/", authenticateUser, async (req, res) => {
     const { image, location, createdAt } = req.body;
     const userId = req.user.id; // Extract user ID from authenticated request
 
-    console.log("userId", userId);
-
     const photosCollection = await getPhotosCollection();
     const usersCollection = await getUsersCollection();
 

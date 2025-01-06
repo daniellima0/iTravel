@@ -5,6 +5,7 @@ const authenticateToken = require("../middleware/authenticateToken");
 const { createUser } = require("../models/user"); // Import the model
 const { getUsersCollection } = require("../db");
 const bcrypt = require("bcryptjs");
+const { ObjectId } = require("mongodb");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -13,13 +14,36 @@ const router = express.Router();
 // Use cookie-parser middleware to parse cookies in incoming requests
 router.use(cookieParser());
 
-// Create a status route that checks if the user is authenticated
-router.get("/status", authenticateToken, (req, res) => {
-  // If we are here, it means the token is valid and the user is authenticated
-  res.status(200).json({
-    message: "Authenticated",
-    user: req.user, // You can send back user details here if needed
-  });
+// Create a status route that checks if the user is authenticated and still exists in the database
+router.get("/status", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId; // Get the user ID from the request object (set by the authenticateUser middleware)
+
+    // Query the users collection to check if the user still exists
+    const usersCollection = await getUsersCollection();
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+    // If the user does not exist, respond with a 404
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // If user exists, return the authenticated status and user details
+    res.status(200).json({
+      message: "Authenticated",
+      user: {
+        id: user._id,
+        username: user.username, // Add other user details if needed
+        email: user.email,
+        // any other details you want to include
+      },
+    });
+  } catch (error) {
+    console.error("Error checking user status:", error);
+    res.status(500).json({ message: "Error checking user status" });
+  }
 });
 
 router.post("/register", async (req, res) => {
