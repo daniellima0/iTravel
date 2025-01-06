@@ -97,6 +97,7 @@
 
 .create-account-link a:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .error-message {

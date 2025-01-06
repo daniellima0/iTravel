@@ -26,4 +26,8 @@ const getUsersCollection = async () => {
   return client.db("itravel-db").collection("users");
 };
 
-module.exports = { connectToMongo, getUsersCollection };
+const getPhotosCollection = async () => {
+  return client.db("itravel-db").collection("photos");
+};
+
+module.exports = { connectToMongo, getUsersCollection, getPhotosCollection };

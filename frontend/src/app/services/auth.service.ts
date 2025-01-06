@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { PhotoMetadata } from './photo.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +31,13 @@ export class AuthService {
       );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    const payload = { username, email, password };
+  register(
+    username: string,
+    email: string,
+    password: string,
+    photos: Array<PhotoMetadata>
+  ): Observable<any> {
+    const payload = { username, email, password, photos };
     return this.http
       .post(`${this.apiUrl}/register`, payload, { withCredentials: true })
       .pipe(

@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const { connectToMongo } = require("./db"); // Import database connection
 const userRoutes = require("./routes/users"); // Import user routes
 const authRoutes = require("./routes/auth"); // Import auth routes
+const photoRoutes = require("./routes/photos"); // Import photo routes
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,6 +36,9 @@ app.use("/users", userRoutes);
 
 // Use the auth routes
 app.use("/auth", authRoutes);
+
+// Use the photo routes
+app.use("/photos", photoRoutes);
 
 // Start the Express server
 app.listen(port, () => {

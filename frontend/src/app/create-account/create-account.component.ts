@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { PhotoMetadata } from '../services/photo.service';
 
 @Component({
   selector: 'app-create-account',
@@ -16,6 +17,7 @@ export class CreateAccountComponent {
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+  photos: Array<PhotoMetadata> = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -36,10 +38,11 @@ export class CreateAccountComponent {
       username: this.username,
       email: this.email,
       password: this.password,
+      photos: this.photos,
     };
 
     this.authService
-      .register(this.username, this.email, this.password)
+      .register(this.username, this.email, this.password, this.photos)
       .subscribe({
         next: (response) => {
           console.log('User created successfully:', response);

@@ -11,7 +11,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
-// import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to handle authentication
+import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to handle authentication
 
 @Component({
   standalone: true,
@@ -24,9 +24,9 @@ export class UploadPhotoButton {
   constructor(
     private photoService: PhotoService,
     private storage: Storage, // Inject the storage service
-    private http: HttpClient // Inject the HTTP client to make API requests
-  ) // private authService: AuthService // Inject the AuthService to get the current user's info
-  {}
+    private http: HttpClient, // Inject the HTTP client to make API requests
+    private authService: AuthService // Inject the AuthService to get the current user's info
+  ) {}
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -97,10 +97,30 @@ export class UploadPhotoButton {
         createdAt: createdAt,
       };
 
+      // Send the metadata to the backend
+      this.savePhotoMetadata(photoMetadata);
+
       this.photoService.addPhoto(photoMetadata);
     } catch (error) {
       console.error('Error processing file:', file.name, error);
     }
+  }
+
+  /**
+   * Send photo metadata to the backend for storage in the database.
+   * @param metadata - The metadata object to send
+   */
+  private savePhotoMetadata(metadata: PhotoMetadata): void {
+    this.http
+      .post('http://localhost:3000/photos', metadata, { withCredentials: true })
+      .subscribe({
+        next: (response) => {
+          console.log('Photo metadata saved successfully:', response);
+        },
+        error: (err) => {
+          console.error('Error saving photo metadata:', err);
+        },
+      });
   }
 
   /**

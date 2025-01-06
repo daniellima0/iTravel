@@ -22,9 +22,8 @@ router.get("/status", authenticateToken, (req, res) => {
   });
 });
 
-// POST route to create a new user and set HttpOnly cookie
 router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, photos } = req.body; // Include photos in the request body
 
   // Validate the input data
   if (!username || !email || !password) {
@@ -34,12 +33,19 @@ router.post("/register", async (req, res) => {
   }
 
   try {
-    // Assuming createUser is a function that creates a user in the database
-    const result = await createUser(username, email, password);
+    // Validate that `photos` is an array if provided
+    if (photos && !Array.isArray(photos)) {
+      return res
+        .status(400)
+        .json({ message: "Photos must be an array if provided." });
+    }
+
+    // Use the `createUser` function to insert the new user into the database
+    const result = await createUser(username, email, password, photos || []); // Pass the photos array (default to empty array if not provided)
 
     // Generate a JWT token
     const token = jwt.sign(
-      { userId: result.insertedId, username: username, email: email }, // Payload
+      { userId: result.insertedId, username, email }, // Payload
       JWT_SECRET, // Secret key to sign the token
       { expiresIn: "2h" } // Expiration time
     );
@@ -48,17 +54,18 @@ router.post("/register", async (req, res) => {
     res.cookie("authToken", token, {
       httpOnly: true, // Make the cookie inaccessible via JavaScript
       secure: process.env.NODE_ENV === "production", // Ensure cookie is only sent over HTTPS in production
-      maxAge: 7200000, // Cookie expiry time in milliseconds (1 hour)
+      maxAge: 7200000, // Cookie expiry time in milliseconds (2 hours)
       sameSite: "strict", // Restrict sending the cookie only to the same site
     });
 
-    // Respond with the user details (you can exclude the password field)
+    // Respond with the user details (excluding the password field)
     res.status(201).json({
       message: "User created successfully",
       user: {
         _id: result.insertedId,
         username,
         email,
+        photos: photos || [], // Include photos in the response
       },
     });
   } catch (error) {
