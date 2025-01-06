@@ -1,7 +1,6 @@
 require("dotenv").config(); // Load environment variables from .env
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const { getAllUsers } = require("../models/user"); // Import the model
+const { getAllUsers, deleteAllUsers } = require("../models/user"); // Import the model
 const cookieParser = require("cookie-parser");
 
 const router = express.Router();
@@ -17,6 +16,20 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Error fetching users" });
+  }
+});
+
+// DELETE all users
+router.delete("/", async (req, res) => {
+  try {
+    const result = await deleteAllUsers(); // Call the model function to delete all users
+    res.status(200).json({
+      message: "All users have been deleted successfully.",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Error deleting all users:", error);
+    res.status(500).json({ message: "Error deleting all users" });
   }
 });
 

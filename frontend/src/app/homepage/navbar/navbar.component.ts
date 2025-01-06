@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class Navbar {
+export class NavbarComponent {
   menuOpen = false;
 
   constructor(private http: HttpClient, private router: Router) {}

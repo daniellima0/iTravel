@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
-import { PhotoService, PhotoMetadata } from '../../services/photo.service';
+import { PhotoService } from '../../services/photo.service';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { PhotoModalComponent } from '../photo-modal/photo-modal.component';
+import { Photo } from '../../models/photo.model';
 
 @Component({
   standalone: true,
@@ -11,7 +12,7 @@ import { PhotoModalComponent } from '../photo-modal/photo-modal.component';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class Map implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
   private geoJsonLayer!: L.GeoJSON;
 
@@ -54,7 +55,7 @@ export class Map implements OnInit, AfterViewInit {
 
   private addMarkers() {
     // Subscribe to the photos$ observable to get photo updates
-    this.photoService.photos$.subscribe((photos: PhotoMetadata[]) => {
+    this.photoService.photos$.subscribe((photos: Photo[]) => {
       // Remove existing markers from the map
       this.clearMarkers();
 
@@ -68,7 +69,6 @@ export class Map implements OnInit, AfterViewInit {
 
           // Optional: Add a popup with additional photo details
           marker.bindPopup(`
-            <strong>Photo ID:</strong> ${photo.id}<br>
             <strong>Timestamp:</strong> ${photo.createdAt}<br>
           `);
 
@@ -200,43 +200,38 @@ export class Map implements OnInit, AfterViewInit {
 
   private filterPhotosByCountry(countryName: string) {
     // Get the most recent photos
-    this.photoService.photos$
-      .pipe(take(1))
-      .subscribe((photos: PhotoMetadata[]) => {
-        // Get the country's geometry
-        const countryGeometry = this.countriesIndex[countryName];
+    this.photoService.photos$.pipe(take(1)).subscribe((photos: Photo[]) => {
+      // Get the country's geometry
+      const countryGeometry = this.countriesIndex[countryName];
 
-        if (!countryGeometry) {
-          console.error(`Geometry not found for country: ${countryName}`);
-          return;
-        }
+      if (!countryGeometry) {
+        console.error(`Geometry not found for country: ${countryName}`);
+        return;
+      }
 
-        // Filter photos within the country
-        const photosInCountry = photos.filter((photo) => {
-          if (photo.location) {
-            const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
+      // Filter photos within the country
+      const photosInCountry = photos.filter((photo) => {
+        if (photo.location) {
+          const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
 
-            if (countryGeometry.type === 'Polygon') {
-              return this.isPointInPolygon(
-                point,
-                countryGeometry.coordinates[0]
-              );
-            } else if (countryGeometry.type === 'MultiPolygon') {
-              // Check all polygons in the multi-polygon
-              return countryGeometry.coordinates.some((polygon: any) =>
-                this.isPointInPolygon(point, polygon[0])
-              );
-            }
+          if (countryGeometry.type === 'Polygon') {
+            return this.isPointInPolygon(point, countryGeometry.coordinates[0]);
+          } else if (countryGeometry.type === 'MultiPolygon') {
+            // Check all polygons in the multi-polygon
+            return countryGeometry.coordinates.some((polygon: any) =>
+              this.isPointInPolygon(point, polygon[0])
+            );
           }
-          return false;
-        });
-
-        // Open the modal with the filtered photos
-        this.openModalWithPhotos(photosInCountry, countryName);
+        }
+        return false;
       });
+
+      // Open the modal with the filtered photos
+      this.openModalWithPhotos(photosInCountry, countryName);
+    });
   }
 
-  private openModalWithPhotos(photos: PhotoMetadata[], countryName: string) {
+  private openModalWithPhotos(photos: Photo[], countryName: string) {
     // Set a delay of 1 second (1000ms) before opening the modal
     setTimeout(() => {
       this.dialog.open(PhotoModalComponent, {

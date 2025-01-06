@@ -10,16 +10,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { PhotoService } from '../../services/photo.service';
 import { Subscription } from 'rxjs';
-
-export interface PhotoModalData {
-  photos: {
-    id: string;
-    createdAt: string;
-    url: string;
-    description?: string;
-  }[];
-  countryName: string;
-}
+import { PhotoModalData } from '../../models/photo-modal-data.model';
 
 @Component({
   selector: 'app-photo-modal',
@@ -30,7 +21,6 @@ export interface PhotoModalData {
 })
 export class PhotoModalComponent implements OnInit, OnDestroy, AfterViewInit {
   photos: {
-    id: string;
     createdAt: string;
     url: string;
     description?: string;
@@ -47,7 +37,6 @@ export class PhotoModalComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     this.photosSubscription = this.photoService.photos$.subscribe((photos) => {
       this.photos = photos.map((photo) => ({
-        id: photo.id,
         createdAt: photo.createdAt.toString(),
         url: photo.image.toString(),
       }));

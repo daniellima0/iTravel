@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { PhotoMetadata } from '../services/photo.service';
+import { Photo } from '../models/photo.model';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-create-account',
@@ -12,12 +13,11 @@ import { PhotoMetadata } from '../services/photo.service';
   imports: [FormsModule],
 })
 export class CreateAccountComponent {
-  // Define the form controls for account creation
   username: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
-  photos: Array<PhotoMetadata> = [];
+  photos: Photo[] = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -34,24 +34,22 @@ export class CreateAccountComponent {
       return;
     }
 
-    const payload = {
+    const user: User = {
       username: this.username,
       email: this.email,
       password: this.password,
       photos: this.photos,
     };
 
-    this.authService
-      .register(this.username, this.email, this.password, this.photos)
-      .subscribe({
-        next: (response) => {
-          console.log('User created successfully:', response);
-          this.router.navigate(['']);
-          alert('Account created successfully!');
-        },
-        error: (err) => {
-          console.error('Error creating user:', err);
-        },
-      });
+    this.authService.register(user).subscribe({
+      next: (response) => {
+        console.log('User created successfully:', response);
+        this.router.navigate(['']);
+        alert('Account created successfully!');
+      },
+      error: (err) => {
+        console.error('Error creating user:', err);
+      },
+    });
   }
 }

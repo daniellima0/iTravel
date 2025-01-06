@@ -21,4 +21,15 @@ const getPhotosByUserId = async (userId) => {
   }
 };
 
-module.exports = { savePhoto, getPhotosByUserId };
+// Delete all photos
+const deleteAllPhotos = async () => {
+  try {
+    const photosCollection = await getPhotosCollection();
+    const result = await photosCollection.deleteMany({});
+    return result; // Return the number of deleted documents
+  } catch (error) {
+    throw new Error("Error deleting photos: " + error.message);
+  }
+};
+
+module.exports = { savePhoto, getPhotosByUserId, deleteAllPhotos };

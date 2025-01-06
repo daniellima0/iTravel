@@ -1,6 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import * as ExifReader from 'exifreader';
-import { PhotoService, PhotoMetadata } from '../../services/photo.service';
+import { PhotoService } from '../../services/photo.service';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Storage,
@@ -11,7 +11,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to handle authentication
+import { Photo } from '../../models/photo.model';
 
 @Component({
   standalone: true,
@@ -20,12 +20,11 @@ import { AuthService } from '../../services/auth.service'; // Assuming you have 
   styleUrls: ['./upload-photo-button.component.css'],
   imports: [MatButtonModule, MatIconModule],
 })
-export class UploadPhotoButton {
+export class UploadPhotoButtonComponent {
   constructor(
     private photoService: PhotoService,
-    private storage: Storage, // Inject the storage service
-    private http: HttpClient, // Inject the HTTP client to make API requests
-    private authService: AuthService // Inject the AuthService to get the current user's info
+    private storage: Storage,
+    private http: HttpClient
   ) {}
 
   onFileChange(event: Event): void {
@@ -84,8 +83,7 @@ export class UploadPhotoButton {
       const photoUrl = await getDownloadURL(storageRef);
       console.log('Photo URL:', photoUrl);
 
-      const photoMetadata: PhotoMetadata = {
-        id: this.generateUniqueId(),
+      const Photo: Photo = {
         image: photoUrl,
         location:
           gpsLongitude && gpsLatitude
@@ -98,9 +96,9 @@ export class UploadPhotoButton {
       };
 
       // Send the metadata to the backend
-      this.savePhotoMetadata(photoMetadata);
+      this.savePhoto(Photo);
 
-      this.photoService.addPhoto(photoMetadata);
+      this.photoService.addPhoto(Photo);
     } catch (error) {
       console.error('Error processing file:', file.name, error);
     }
@@ -110,7 +108,7 @@ export class UploadPhotoButton {
    * Send photo metadata to the backend for storage in the database.
    * @param metadata - The metadata object to send
    */
-  private savePhotoMetadata(metadata: PhotoMetadata): void {
+  private savePhoto(metadata: Photo): void {
     this.http
       .post('http://localhost:3000/photos', metadata, { withCredentials: true })
       .subscribe({

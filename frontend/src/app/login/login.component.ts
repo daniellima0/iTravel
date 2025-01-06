@@ -12,7 +12,6 @@ import { AuthService } from '../services/auth.service';
   imports: [FormsModule, CommonModule],
 })
 export class LoginComponent {
-  // Define the form controls (for simplicity, no form validation here)
   username: string = '';
   password: string = '';
   errorMessage: string = ''; // To display error messages

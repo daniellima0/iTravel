@@ -1,8 +1,9 @@
 const express = require("express");
-const { getPhotosByUserId } = require("../models/photo");
+const { getPhotosByUserId, deleteAllPhotos } = require("../models/photo");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { getPhotosCollection, getUsersCollection } = require("../db");
+const { ObjectId } = require("mongodb"); // Import ObjectId
 
 const router = express.Router();
 router.use(cookieParser());
@@ -31,6 +32,8 @@ router.post("/", authenticateUser, async (req, res) => {
     const { image, location, createdAt } = req.body;
     const userId = req.user.id; // Extract user ID from authenticated request
 
+    console.log("userId", userId);
+
     const photosCollection = await getPhotosCollection();
     const usersCollection = await getUsersCollection();
 
@@ -47,11 +50,17 @@ router.post("/", authenticateUser, async (req, res) => {
 
     // Update the user's photos array with the new photo ID
     await usersCollection.updateOne(
-      { _id: userId }, // Find the user by their ID
+      { _id: new ObjectId(userId) }, // Convert userId to ObjectId
       { $push: { photos: photoId } } // Add the new photo ID to the photos array
     );
 
-    res.status(201).json({ message: "Photo uploaded successfully!", photo });
+    const updatedUser = await usersCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+
+    res
+      .status(201)
+      .json({ message: "Photo uploaded successfully!", photo, updatedUser });
   } catch (error) {
     console.error("Error uploading photo:", error);
     res.status(500).json({ message: "Error uploading photo" });
@@ -66,6 +75,21 @@ router.get("/", authenticateUser, async (req, res) => {
   } catch (error) {
     console.error("Error fetching photos:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// DELETE /photos - Delete all photos
+router.delete("/", async (req, res) => {
+  try {
+    const result = await deleteAllPhotos();
+
+    res.status(200).json({
+      message: "All photos have been deleted successfully.",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Error deleting photos:", error);
+    res.status(500).json({ message: "Error deleting photos" });
   }
 });
 
