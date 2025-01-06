@@ -45,7 +45,6 @@ export class CreateAccountComponent {
       next: (response) => {
         console.log('User created successfully:', response);
         this.router.navigate(['']);
-        alert('Account created successfully!');
       },
       error: (err) => {
         console.error('Error creating user:', err);
