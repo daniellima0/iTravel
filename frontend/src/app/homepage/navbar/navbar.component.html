@@ -10,7 +10,10 @@
       <span></span>
     </button>
     <div class="menu">
-      <a>My Photos</a>
+      <div *ngIf="userName" class="user-info">
+        <p class="greeting">Hi, {{ userName }}</p>
+      </div>
+      <span id="divider"></span>
       <a (click)="logout()">Sign Out</a>
     </div>
   </div>

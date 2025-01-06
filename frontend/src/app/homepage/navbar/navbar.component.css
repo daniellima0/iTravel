@@ -74,6 +74,27 @@
 
 .menu a:hover {
   background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.greeting {
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin: 0;
+}
+
+#divider {
+  display: flex;
+  height: 1px;
+  background-color: #ccc;
 }
 
 /* Responsive Design */
