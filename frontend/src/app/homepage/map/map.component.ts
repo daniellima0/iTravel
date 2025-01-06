@@ -55,7 +55,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private addMarkers() {
     // Subscribe to the photos$ observable to get photo updates
-    this.photoService.photos$.subscribe((photos: Photo[]) => {
+    this.photoService.getUserPhotos().subscribe((photos: Photo[]) => {
       // Remove existing markers from the map
       this.clearMarkers();
 
@@ -200,35 +200,45 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private filterPhotosByCountry(countryName: string) {
     // Get the most recent photos
-    this.photoService.photos$.pipe(take(1)).subscribe((photos: Photo[]) => {
-      // Get the country's geometry
-      const countryGeometry = this.countriesIndex[countryName];
+    this.photoService
+      .getUserPhotos()
+      .pipe(take(1))
+      .subscribe((photos: Photo[]) => {
+        console.log(photos);
 
-      if (!countryGeometry) {
-        console.error(`Geometry not found for country: ${countryName}`);
-        return;
-      }
+        // Get the country's geometry
+        const countryGeometry = this.countriesIndex[countryName];
 
-      // Filter photos within the country
-      const photosInCountry = photos.filter((photo) => {
-        if (photo.location) {
-          const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
-
-          if (countryGeometry.type === 'Polygon') {
-            return this.isPointInPolygon(point, countryGeometry.coordinates[0]);
-          } else if (countryGeometry.type === 'MultiPolygon') {
-            // Check all polygons in the multi-polygon
-            return countryGeometry.coordinates.some((polygon: any) =>
-              this.isPointInPolygon(point, polygon[0])
-            );
-          }
+        if (!countryGeometry) {
+          console.error(`Geometry not found for country: ${countryName}`);
+          return;
         }
-        return false;
-      });
 
-      // Open the modal with the filtered photos
-      this.openModalWithPhotos(photosInCountry, countryName);
-    });
+        // Filter photos within the country
+        const photosInCountry = photos.filter((photo) => {
+          if (photo.location) {
+            const point = [photo.location.longitude, photo.location.latitude]; // [longitude, latitude]
+
+            if (countryGeometry.type === 'Polygon') {
+              return this.isPointInPolygon(
+                point,
+                countryGeometry.coordinates[0]
+              );
+            } else if (countryGeometry.type === 'MultiPolygon') {
+              // Check all polygons in the multi-polygon
+              return countryGeometry.coordinates.some((polygon: any) =>
+                this.isPointInPolygon(point, polygon[0])
+              );
+            }
+          }
+          return false;
+        });
+
+        console.log(photosInCountry);
+
+        // Open the modal with the filtered photos
+        this.openModalWithPhotos(photosInCountry, countryName);
+      });
   }
 
   private openModalWithPhotos(photos: Photo[], countryName: string) {

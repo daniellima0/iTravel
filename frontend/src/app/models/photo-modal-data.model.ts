@@ -1,8 +1,6 @@
+import { Photo } from './photo.model';
+
 export interface PhotoModalData {
-  photos: {
-    createdAt: string;
-    url: string;
-    description?: string;
-  }[];
+  photos: Photo[];
   countryName: string;
 }
