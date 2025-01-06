@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 // JWT Secret (Same secret key as used in registration)
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const authenticateToken = (req, res, next) => {
+const authenticateUser = (req, res, next) => {
   // Get the token from cookies
   const token = req.cookies.authToken;
 
@@ -29,4 +29,4 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-module.exports = authenticateToken;
+module.exports = authenticateUser;

@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const authenticateToken = require("../middleware/authenticateToken");
+const authenticateUser = require("../middleware/authenticateUser");
 const { createUser } = require("../models/user"); // Import the model
 const { getUsersCollection } = require("../db");
 const bcrypt = require("bcryptjs");
@@ -15,7 +15,7 @@ const router = express.Router();
 router.use(cookieParser());
 
 // Create a status route that checks if the user is authenticated and still exists in the database
-router.get("/status", authenticateToken, async (req, res) => {
+router.get("/status", authenticateUser, async (req, res) => {
   try {
     const userId = req.user.userId; // Get the user ID from the request object (set by the authenticateUser middleware)
 
