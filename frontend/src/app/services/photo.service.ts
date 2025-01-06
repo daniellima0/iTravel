@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class PhotoService {
-  private photosSource = new BehaviorSubject<Photo[]>([]); // Store multiple photos
+  photosSource = new BehaviorSubject<Photo[]>([]); // Store multiple photos
   photos$ = this.photosSource.asObservable(); // Observable for tracking updates
 
   constructor(private http: HttpClient) {}

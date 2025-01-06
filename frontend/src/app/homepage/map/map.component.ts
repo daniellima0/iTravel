@@ -36,6 +36,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.initializeMap();
+
+    // Fetch initial photos and load them into the service
+    this.photoService.getUserPhotos().subscribe((photos) => {
+      this.photoService.photosSource.next(photos);
+    });
+
     this.addMarkers();
     this.addGeoJsonLayer();
   }
@@ -55,7 +61,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private addMarkers() {
     // Subscribe to the photos$ observable to get photo updates
-    this.photoService.getUserPhotos().subscribe((photos: Photo[]) => {
+    this.photoService.photos$.subscribe((photos: Photo[]) => {
       // Remove existing markers from the map
       this.clearMarkers();
 
