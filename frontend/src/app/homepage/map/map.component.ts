@@ -191,7 +191,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     layer.on({
       click: () => {
         const countryName = feature.properties.name;
-        console.log(`Clicked on country: ${countryName}`);
 
         // Get the bounding box of the clicked country
         const bounds = L.geoJSON(feature).getBounds();
@@ -210,8 +209,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       .getUserPhotos()
       .pipe(take(1))
       .subscribe((photos: Photo[]) => {
-        console.log(photos);
-
         // Get the country's geometry
         const countryGeometry = this.countriesIndex[countryName];
 
@@ -239,8 +236,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
           return false;
         });
-
-        console.log(photosInCountry);
 
         // Open the modal with the filtered photos
         this.openModalWithPhotos(photosInCountry, countryName);

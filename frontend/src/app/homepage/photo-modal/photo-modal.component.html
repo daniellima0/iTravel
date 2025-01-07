@@ -8,14 +8,26 @@
   <div mat-dialog-content>
     <h2 class="country-title">{{ data.countryName }}</h2>
     <div *ngIf="data.photos.length > 0; else noPhotos" class="slider">
-      <div *ngFor="let photo of data.photos" class="slider__slide">
+      <div
+        *ngFor="let photo of data.photos; let i = index"
+        class="slider__slide"
+      >
         <div class="caption">
           <p><strong>Date:</strong> {{ photo.createdAt | date : "medium" }}</p>
         </div>
         <img [src]="photo.image" alt="Photo" class="photo" />
-        <p class="description">
-          {{ photo.description ? photo.description : "" }}
-        </p>
+        <div class="description-container">
+          <label for="description-{{ i }}">Description:</label>
+          <input
+            id="description-{{ i }}"
+            type="text"
+            [(ngModel)]="photo.description"
+            placeholder="Enter description here"
+          />
+        </div>
+        <button mat-button color="primary" (click)="saveDescription(photo)">
+          Save
+        </button>
       </div>
     </div>
     <ng-template #noPhotos>

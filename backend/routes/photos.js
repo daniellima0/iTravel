@@ -91,4 +91,31 @@ router.delete("/", async (req, res) => {
   }
 });
 
+// PATCH /photos/:id - Update photo description
+router.patch("/:id", authenticateUser, async (req, res) => {
+  try {
+    const { id } = req.params; // Extract photo ID from route params
+    const { description } = req.body; // Extract new description from request body
+
+    const photosCollection = await getPhotosCollection();
+
+    // Find and update the photo document
+    const result = await photosCollection.updateOne(
+      { _id: new ObjectId(id), userId: req.user.id }, // Match photo ID and user ID
+      { $set: { description } } // Update the description field
+    );
+
+    if (result.matchedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "Photo not found or unauthorized" });
+    }
+
+    res.status(200).json({ message: "Description updated successfully" });
+  } catch (error) {
+    console.error("Error updating photo description:", error);
+    res.status(500).json({ message: "Error updating photo description" });
+  }
+});
+
 module.exports = router;

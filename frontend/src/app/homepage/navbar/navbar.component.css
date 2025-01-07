@@ -61,7 +61,7 @@
 }
 
 .menu.open {
-  display: block; /* Le menu est visible si la classe 'open' est présente */
+  display: block;
 }
 
 .menu a {

@@ -48,14 +48,10 @@ export class NavbarComponent {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
-    const menu = document.querySelector('.menu') as HTMLElement;
-    menu.style.display = this.menuOpen ? 'block' : 'none';
   }
 
   closeMenu() {
     this.menuOpen = false;
-    const menu = document.querySelector('.menu') as HTMLElement;
-    menu.style.display = 'none';
   }
 
   logout() {
@@ -72,8 +68,6 @@ export class NavbarComponent {
         error: (err) => {
           // Handle error in logout process
           console.error('Error logging out:', err);
-          // Optionally, show an error message to the user
-          alert('Error logging out. Please try again.');
         },
       });
   }

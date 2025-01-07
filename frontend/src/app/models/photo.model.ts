@@ -1,4 +1,5 @@
 export interface Photo {
+  _id?: string; // Unique identifier for the photo
   image: string | File; // Store as a base64 string or File object
   location: {
     longitude: number;

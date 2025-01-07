@@ -75,8 +75,6 @@ export class UploadPhotoButtonComponent {
         photosWithoutLocation
       );
 
-      console.log('Updated photos with location:', updatedPhotos);
-
       // If modal was canceled or closed, discard the photos without location
       if (updatedPhotos) {
         // Map updated photos back to their original structure
@@ -125,9 +123,6 @@ export class UploadPhotoButtonComponent {
       if (tags.GPSLatitudeRef?.description === 'South latitude') {
         gpsLatitudeNumber = -Number(gpsLatitude);
       }
-
-      console.log('gpsLongitude:', gpsLongitudeNumber);
-      console.log('gpsLatitude:', gpsLatitudeNumber);
 
       const creationDate = tags.DateTimeOriginal?.description;
       const convertedDate = creationDate
@@ -208,8 +203,10 @@ export class UploadPhotoButtonComponent {
             withCredentials: true,
           })
           .subscribe({
-            next: (response) => {
+            next: (response: any) => {
               console.log('Photo metadata saved successfully:', response);
+              photo._id = response.photo._id;
+              console.log(photo._id);
               this.photoService.addPhoto(photo);
             },
             error: (err) => console.error('Error saving photo metadata:', err),

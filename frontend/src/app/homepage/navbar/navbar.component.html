@@ -9,7 +9,7 @@
       <span></span>
       <span></span>
     </button>
-    <div class="menu">
+    <div class="menu" [ngClass]="{ open: menuOpen }">
       <div *ngIf="userName" class="user-info">
         <p class="greeting">Hi, {{ userName }}</p>
       </div>

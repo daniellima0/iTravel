@@ -28,4 +28,22 @@ export class PhotoService {
       withCredentials: true,
     }); // Adjust the URL if needed
   }
+
+  /**
+   * Update the description of a photo.
+   * @param photoId - ID of the photo to update.
+   * @param description - New description text.
+   * @returns Observable<any>
+   */
+  updatePhotoDescription(
+    photoId: string,
+    description: string
+  ): Observable<any> {
+    console.log('Updating description for photo:', photoId);
+    return this.http.patch(
+      `http://localhost:3000/photos/${photoId}`,
+      { description },
+      { withCredentials: true }
+    );
+  }
 }
