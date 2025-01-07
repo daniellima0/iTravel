@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Add Location</h1>
+<div mat-dialog-content>
+  <p>Provide location information for the selected photos:</p>
+  <form>
+    <div *ngFor="let photo of data">
+      <img [src]="photo.preview" alt="Photo preview" style="width: 100px" />
+      <div>
+        <label for="latitude">Latitude:</label>
+        <input
+          type="text"
+          id="latitude"
+          [(ngModel)]="photo.latitude"
+          name="latitude"
+        />
+        <label for="longitude">Longitude:</label>
+        <input
+          type="text"
+          id="longitude"
+          [(ngModel)]="photo.longitude"
+          name="lagitude"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onSave(data)">Save</button>
+</div>
