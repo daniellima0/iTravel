@@ -251,6 +251,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           countryName: countryName,
         },
       });
-    }, 1000); // 1000ms delay
+    }, 500);
   }
 }

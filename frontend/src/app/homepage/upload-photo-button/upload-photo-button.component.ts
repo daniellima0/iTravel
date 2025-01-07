@@ -14,15 +14,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { Photo } from '../../models/photo.model';
 import { AddLocationModalComponent } from '../add-location-modal/add-location-modal.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'upload-photo-button',
   templateUrl: './upload-photo-button.component.html',
   styleUrls: ['./upload-photo-button.component.css'],
-  imports: [MatButtonModule, MatIconModule],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+  ],
 })
 export class UploadPhotoButtonComponent {
+  loading: boolean = false; // Flag to control the loading state
+
   constructor(
     private photoService: PhotoService,
     private storage: Storage,
@@ -184,6 +193,8 @@ export class UploadPhotoButtonComponent {
    * @param photos - The photos to save
    */
   private async savePhotos(photos: Photo[], files: File[]): Promise<void> {
+    this.loading = true; // Show loading spinner when uploading starts
+
     for (let i = 0; i < photos.length; i++) {
       try {
         const photo = photos[i];
@@ -215,6 +226,8 @@ export class UploadPhotoButtonComponent {
         console.error('Error saving photo:', error);
       }
     }
+
+    this.loading = false; // Hide loading spinner when upload completes
   }
 
   /**

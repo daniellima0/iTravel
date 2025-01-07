@@ -23,8 +23,22 @@ export class PhotoModalComponent {
     private photoService: PhotoService
   ) {}
 
+  ngOnInit(): void {
+    // Sort photos by createdAt date (descending order, latest first)
+    this.sortPhotosByDate();
+  }
+
   close(): void {
     this.dialogRef.close();
+  }
+
+  // Sort photos by date
+  sortPhotosByDate(): void {
+    this.data.photos.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateA - dateB; // descending order (latest first)
+    });
   }
 
   // Handle click on description to enable editing
