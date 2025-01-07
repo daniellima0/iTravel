@@ -16,8 +16,30 @@ export class AddLocationModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  onSave(locationData: any): void {
-    this.dialogRef.close(locationData);
+  onSave(): void {
+    // Update `photo.location` with `latitude` and `longitude`
+    this.data.forEach((photo: any) => {
+      if (photo.latitude && photo.longitude) {
+        photo.photo.location = {
+          latitude: parseFloat(photo.latitude),
+          longitude: parseFloat(photo.longitude),
+        };
+      }
+    });
+
+    // Validate all photos have location data
+    const isValid = this.data.every(
+      (photo: any) =>
+        photo.photo.location &&
+        !isNaN(photo.photo.location.latitude) &&
+        !isNaN(photo.photo.location.longitude)
+    );
+
+    if (isValid) {
+      this.dialogRef.close(this.data); // Pass the updated data back
+    } else {
+      console.error('Invalid location data:', this.data);
+    }
   }
 
   onCancel(): void {

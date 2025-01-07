@@ -45,7 +45,7 @@ export class UploadPhotoButtonComponent {
 
   /**
    * Process a single file to extract metadata and store it.
-   * @param file - The file to process
+   * @param files - The files to process
    */
   private async processFiles(files: File[]): Promise<void> {
     const photosWithoutLocation: {
@@ -71,13 +71,26 @@ export class UploadPhotoButtonComponent {
     }
 
     if (photosWithoutLocation.length > 0) {
-      this.openAddLocationModal(photosWithoutLocation).then((updatedPhotos) => {
+      const updatedPhotos = await this.openAddLocationModal(
+        photosWithoutLocation
+      );
+
+      console.log('Updated photos with location:', updatedPhotos);
+
+      // If modal was canceled or closed, discard the photos without location
+      if (updatedPhotos) {
+        // Map updated photos back to their original structure
         const allPhotos = [
           ...photosWithLocation.map((p) => p.photo),
-          ...updatedPhotos,
+          ...updatedPhotos.map((p) => ({
+            ...p['photo'],
+            location: p['photo'].location, // Ensure `location` is present
+          })),
         ];
         this.savePhotos(allPhotos, files);
-      });
+      } else {
+        console.log('Modal was canceled, discarding photos without location.');
+      }
     } else {
       this.savePhotos(
         photosWithLocation.map((p) => p.photo),
@@ -158,11 +171,11 @@ export class UploadPhotoButtonComponent {
   /**
    * Open a modal to add location data for photos.
    * @param photos - Photos without location data
-   * @returns A promise that resolves to the updated photos
+   * @returns A promise that resolves to the updated photos or null if canceled
    */
   private openAddLocationModal(
     photos: { file: File; preview: string; photo: Photo }[]
-  ): Promise<Photo[]> {
+  ): Promise<Photo[] | null> {
     const dialogRef = this.dialog.open(AddLocationModalComponent, {
       data: photos,
       width: '600px',

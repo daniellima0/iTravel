@@ -17,7 +17,7 @@
           <div class="form-group">
             <label for="latitude-{{ photo.id }}">Latitude:</label>
             <input
-              type="text"
+              type="number"
               id="latitude-{{ photo.id }}"
               [(ngModel)]="photo.latitude"
               name="latitude-{{ photo.id }}"
@@ -27,7 +27,7 @@
           <div class="form-group">
             <label for="longitude-{{ photo.id }}">Longitude:</label>
             <input
-              type="text"
+              type="number"
               id="longitude-{{ photo.id }}"
               [(ngModel)]="photo.longitude"
               name="longitude-{{ photo.id }}"
@@ -46,7 +46,7 @@
     <button mat-button mat-stroked-button color="warn" (click)="onCancel()">
       Cancel
     </button>
-    <button mat-button mat-flat-button color="primary" (click)="onSave(data)">
+    <button mat-button mat-flat-button color="primary" (click)="onSave()">
       Save
     </button>
   </div>
