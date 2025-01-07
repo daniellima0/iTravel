@@ -17,17 +17,27 @@
         </div>
         <img [src]="photo.image" alt="Photo" class="photo" />
         <div class="description-container">
-          <label for="description-{{ i }}">Description:</label>
-          <input
-            id="description-{{ i }}"
-            type="text"
-            [(ngModel)]="photo.description"
-            placeholder="Enter description here"
-          />
+          <div *ngIf="!isEditing[i]">
+            <p
+              class="description-text"
+              (click)="editDescription(i)"
+              [ngClass]="{ 'no-description': !photo.description }"
+            >
+              {{ photo.description || "No description" }}
+            </p>
+          </div>
+          <div *ngIf="isEditing[i]">
+            <textarea
+              id="description-{{ i }}"
+              [(ngModel)]="photo.description"
+              (blur)="saveDescription(photo)"
+              (keyup.enter)="saveDescription(photo)"
+              [placeholder]="photo.description ? '' : 'Enter description here'"
+              rows="4"
+              cols="50"
+            ></textarea>
+          </div>
         </div>
-        <button mat-button color="primary" (click)="saveDescription(photo)">
-          Save
-        </button>
       </div>
     </div>
     <ng-template #noPhotos>

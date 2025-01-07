@@ -14,6 +14,9 @@ import { Photo } from '../../models/photo.model';
   imports: [CommonModule, FormsModule],
 })
 export class PhotoModalComponent {
+  // Array to track which photo is being edited
+  isEditing: boolean[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<PhotoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PhotoModalData,
@@ -24,11 +27,16 @@ export class PhotoModalComponent {
     this.dialogRef.close();
   }
 
+  // Handle click on description to enable editing
+  editDescription(index: number): void {
+    this.isEditing[index] = true;
+  }
+
+  // Save the description
   saveDescription(photo: Photo): void {
     console.log('Saving description for photo:', photo);
     if (photo._id) {
-      // Provide a default empty string if description is undefined
-      const description = photo.description ?? '';
+      const description = photo.description ?? ''; // If description is undefined, default to empty string
       this.photoService
         .updatePhotoDescription(photo._id, description)
         .subscribe({
@@ -42,5 +50,9 @@ export class PhotoModalComponent {
     } else {
       console.error('Photo ID is undefined. Cannot save description.');
     }
+
+    // Stop editing after saving
+    const photoIndex = this.data.photos.indexOf(photo);
+    this.isEditing[photoIndex] = false;
   }
 }

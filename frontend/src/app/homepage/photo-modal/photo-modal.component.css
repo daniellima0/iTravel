@@ -82,6 +82,7 @@
   flex-shrink: 0; /* Prevent shrinking */
   width: 300px; /* Fixed width for each slide */
   margin: 0; /* Remove margin that could cause misalignment */
+  margin-top: -2.6rem;
   scroll-snap-align: start; /* Align the slides to the left */
 }
 
@@ -148,4 +149,59 @@ button:hover {
 
 .mat-dialog-actions button:hover {
   background-color: #0056b3;
+}
+
+/* Description container */
+.description-container {
+  margin-top: 10px;
+}
+
+/* Description text styling */
+.description-text {
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Italicize 'No description' */
+.description-text.no-description {
+  font-style: italic;
+  color: #888;
+}
+
+/* Ensure the textarea does not stretch horizontally */
+.description-container textarea {
+  width: 100%; /* Full width of the parent container */
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical; /* Allows the user to resize vertically */
+  max-height: 80px;
+}
+
+/* Optional: focus styles for the textarea */
+.description-container textarea:focus {
+  border-color: #007bff;
+}
+
+/* Button styling */
+button {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.75rem 0.75rem;
+  border-radius: 8px;
+  background-color: #7fbef5;
+  color: white;
+  border: none;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #65a9c4;
+  cursor: pointer;
 }
