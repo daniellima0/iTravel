@@ -54,7 +54,7 @@
   text-align: center;
 }
 
-/* Photo slider */
+/* Photo slider container */
 .slider {
   height: 100%;
   margin: 0;
@@ -62,10 +62,12 @@
   position: relative;
   display: flex;
   gap: 2rem;
-  justify-content: flex-start; /* Align items to the left to avoid gaps */
+  justify-content: flex-start; /* Align items to the left */
   width: 100%; /* Ensure the container is taking full width */
   overflow-x: auto; /* Enables horizontal scrolling */
   scroll-snap-type: x mandatory; /* Adds smooth snapping between slides */
+  align-items: center; /* Vertically center the content when there's no photo */
+  justify-content: center; /* Ensure the content is centered */
 }
 
 /* Ensures the slides have a fixed width and don't shrink */
@@ -79,11 +81,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: white;
   padding: 0 2rem;
-  flex-shrink: 0; /* Prevent shrinking */
-  width: 300px; /* Fixed width for each slide */
-  margin: 0; /* Remove margin that could cause misalignment */
+  flex-shrink: 0;
+  width: 300px;
+  margin: 0;
   margin-top: -2.6rem;
-  scroll-snap-align: start; /* Align the slides to the left */
+  scroll-snap-align: start;
 }
 
 /* Image styling */
@@ -94,7 +96,7 @@
   border-radius: 12px;
 }
 
-/* Caption text */
+/* Adjust the caption container to keep content centered */
 .caption {
   font-size: 0.95rem;
   color: #666;
@@ -107,6 +109,11 @@
   color: #888;
   font-style: italic;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure the container takes up the full height */
+  margin-top: 7rem;
 }
 
 /* Button styling */
