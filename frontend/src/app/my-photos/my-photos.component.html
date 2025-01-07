@@ -1,0 +1,25 @@
+<div class="my-photos-container">
+  <!-- Header with photo count -->
+  <div class="header">
+    <h1>My Photos</h1>
+    <p class="photo-count">{{ photos.length }} Photos</p>
+  </div>
+
+  <!-- Grid layout for displaying photos -->
+  <div class="photo-grid">
+    <div class="photo-card" *ngFor="let photo of photos">
+      <img [src]="photo.image" alt="Photo" class="photo-image" />
+      <div class="photo-info">
+        <p class="photo-date">{{ photo.createdAt | date : "medium" }}</p>
+        <p class="photo-description">
+          {{ photo.description || "No description" }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Display message if no photos -->
+  <div *ngIf="photos.length === 0" class="no-photos">
+    <p>No photos found! Please upload some.</p>
+  </div>
+</div>

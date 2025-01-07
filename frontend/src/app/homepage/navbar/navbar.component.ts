@@ -71,4 +71,8 @@ export class NavbarComponent {
         },
       });
   }
+
+  navigateToMyPhotos(): void {
+    this.router.navigate(['my-photos']);
+  }
 }
