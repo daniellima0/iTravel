@@ -1,29 +1,53 @@
-<h1 mat-dialog-title>Add Location</h1>
-<div mat-dialog-content>
-  <p>Provide location information for the selected photos:</p>
-  <form>
-    <div *ngFor="let photo of data">
-      <img [src]="photo.preview" alt="Photo preview" style="width: 100px" />
-      <div>
-        <label for="latitude">Latitude:</label>
-        <input
-          type="text"
-          id="latitude"
-          [(ngModel)]="photo.latitude"
-          name="latitude"
-        />
-        <label for="longitude">Longitude:</label>
-        <input
-          type="text"
-          id="longitude"
-          [(ngModel)]="photo.longitude"
-          name="lagitude"
-        />
+<div class="photo-modal-container">
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-stroked-button color="primary" (click)="onCancel()">
+      X
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <h2 class="country-title">Add Location</h2>
+    <p class="description">
+      Provide location information for the selected photos:
+    </p>
+    <div *ngIf="data.length > 0; else noPhotos" class="slider">
+      <div *ngFor="let photo of data" class="slider__slide">
+        <img [src]="photo.preview" alt="Photo preview" class="photo" />
+        <form class="photo-form">
+          <div class="form-group">
+            <label for="latitude-{{ photo.id }}">Latitude:</label>
+            <input
+              type="text"
+              id="latitude-{{ photo.id }}"
+              [(ngModel)]="photo.latitude"
+              name="latitude-{{ photo.id }}"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="longitude-{{ photo.id }}">Longitude:</label>
+            <input
+              type="text"
+              id="longitude-{{ photo.id }}"
+              [(ngModel)]="photo.longitude"
+              name="longitude-{{ photo.id }}"
+              class="form-control"
+            />
+          </div>
+        </form>
       </div>
     </div>
-  </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button (click)="onSave(data)">Save</button>
+    <ng-template #noPhotos>
+      <p class="no-photos">No photos selected 😔</p>
+    </ng-template>
+  </div>
+
+  <div mat-dialog-actions class="actions" align="end">
+    <button mat-button mat-stroked-button color="warn" (click)="onCancel()">
+      Cancel
+    </button>
+    <button mat-button mat-flat-button color="primary" (click)="onSave(data)">
+      Save
+    </button>
+  </div>
 </div>
