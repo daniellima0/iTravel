@@ -72,6 +72,10 @@ export class NavbarComponent {
       });
   }
 
+  navigateToHomepage(): void {
+    this.router.navigate(['']);
+  }
+
   navigateToMyPhotos(): void {
     this.router.navigate(['my-photos']);
   }

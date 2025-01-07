@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from '../navbar/navbar.component';
 import { MapComponent } from './map/map.component';
 import { UploadPhotoButtonComponent } from './upload-photo-button/upload-photo-button.component';
 import { Router } from '@angular/router';

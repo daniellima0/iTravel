@@ -4,13 +4,14 @@ import { Photo } from '../models/photo.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-my-photos',
   templateUrl: './my-photos.component.html',
   styleUrls: ['./my-photos.component.css'],
   standalone: true,
-  imports: [DatePipe, CommonModule],
+  imports: [DatePipe, CommonModule, NavbarComponent],
 })
 export class MyPhotosComponent implements OnInit {
   photos: Photo[] = []; // Array to store photos
