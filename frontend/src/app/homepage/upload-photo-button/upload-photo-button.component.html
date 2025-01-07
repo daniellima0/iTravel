@@ -1,14 +1,23 @@
+<!-- Full-screen loading text with animated dots -->
+<div *ngIf="loading" class="loading-text-container">
+  <div class="loading-text">
+    Your photos are traveling<span class="dots">.</span
+    ><span class="dots">.</span><span class="dots">.</span>
+  </div>
+</div>
+
+<!-- Photo upload button and file input -->
 <div class="upload-photo-button-container">
-  <!-- Floating action button with a plus icon -->
   <button
     mat-fab
     color="primary"
     (click)="fileInput.click()"
     aria-label="Upload Photo"
+    [disabled]="loading"
   >
     <mat-icon>add</mat-icon>
   </button>
-  <!-- File input, hidden but triggered by the FAB -->
+
   <input
     type="file"
     id="fileInput"
