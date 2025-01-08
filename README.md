@@ -1,27 +1,83 @@
-# ITravel
+# iTravel
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.11.
+Welcome to the iTravel project! This project consists of two main components:
+- **Frontend**: Built with Angular v18.
+- **Backend**: Built with ExpressJS.
 
-## Development server
+## Repository
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+The source code for this project is available on GitHub:
+https://github.com/daniellima0/iTravel/
 
-## Code scaffolding
+## Prerequisites
+Before running the project, ensure you have the following installed on your system:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- [Node.js](https://nodejs.org/) (v16 or later recommended)
+- npm (comes with Node.js)
 
-## Build
+## Project Structure
+The project has the following structure:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+/
+|-- /frontend    # Angular frontend
+|-- /backend     # ExpressJS backend
+|-- README.md    # Project documentation
+```
 
-## Running unit tests
+## Setting Up and Running the Project
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Frontend
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
 
-## Running end-to-end tests
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+3. Start the Angular development server:
+   ```bash
+   npm start
+   ```
 
-## Further help
+4. The frontend application will be available at `http://localhost:4200` by default.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Backend
+1. Navigate to the `backend` directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the ExpressJS server:
+   ```bash
+   node ./index.js
+   ```
+
+4. The backend server will be available at `http://localhost:3000` by default (or the port specified in your code).
+
+## Additional Notes
+- Ensure both the frontend and backend are running simultaneously for the application to function correctly.
+- Adjust configurations (e.g., API endpoints) if necessary to ensure proper communication between the frontend and backend.
+
+## Troubleshooting
+If you encounter issues, ensure you have the correct versions of Node.js and npm installed. You can check your installed versions using:
+
+```bash
+node -v
+npm -v
+```
+
+If issues persist, consult the logs output by the frontend and backend servers for debugging information.
+
+---
+
+Happy coding!
+
