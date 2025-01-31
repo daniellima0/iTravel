@@ -22,8 +22,23 @@ The project has the following structure:
 /
 |-- /frontend    # Angular frontend
 |-- /backend     # ExpressJS backend
+|-- /images      # Screenshots of the project
 |-- README.md    # Project documentation
 ```
+
+## Screenshots
+
+### Login Page
+![Login Page](./images/login.png)
+
+### Create Account Page
+![Create Account Page](./images/create-account.png)
+
+### Homepage
+![Homepage](./images/homepage.png)
+
+### My Photos Page
+![My Photos Page](./images/my-photos.png)
 
 ## Setting Up and Running the Project
 
