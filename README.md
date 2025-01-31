@@ -37,6 +37,9 @@ The project has the following structure:
 ### Homepage
 ![Homepage](./images/homepage.png)
 
+### Photos Carousel
+![Photos Carousel](./images/photos-carousel.png)
+
 ### My Photos Page
 ![My Photos Page](./images/my-photos.png)
 
